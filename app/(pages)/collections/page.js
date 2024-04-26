@@ -1,6 +1,6 @@
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
-import Collections from "@/pages/Collections";
+import Collections from "@/components/pages/Collections";
 
 
 export const metadata = {

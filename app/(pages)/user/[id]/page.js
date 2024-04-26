@@ -1,8 +1,8 @@
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
-import Banner from "@/pages/collection/Banner";
-import Profile from "@/pages/collection/Profile";
-import Collcetions from "@/pages/user/Collcetions";
+import Banner from "@/components/pages/collection/Banner";
+import Profile from "@/components/pages/collection/Profile";
+import Collcetions from "@/components/pages/user/Collcetions";
 
 
 export const metadata = {
