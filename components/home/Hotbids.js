@@ -29,7 +29,7 @@ export default function Hotbids() {
     }
   };
   return (
-    <section className="pt-10 lg:pt-60 pb-24">
+    <section className="pt-10 lg:pt-10 pb-24 ">
       <div className="container">
         <h2 className="mb-8 text-center font-display text-3xl text-jacarta-700 dark:text-white">
           <span
