@@ -27,6 +27,7 @@ module.exports = {
       current: "currentColor",
       white: "#ffffff",
       accent: "#8358FF",
+
       red: "red",
       blue: "#428AF8",
       "accent-dark": "#7444FF",

@@ -1,8 +1,10 @@
 "use client";
-import { collections3 } from "@/data/collections";
+// import { collections3 } from "@/data/collections";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { collections } from "@/data/dataCollection";
+import { ClipLoader } from "react-spinners";
 const categories = [
   {
     id: 1,
@@ -14,7 +16,6 @@ const categories = [
     name: "Collectibles",
     icon: "M2 4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v5.5a2.5 2.5 0 1 0 0 5V20a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4zm6.085 15a1.5 1.5 0 0 1 2.83 0H20v-2.968a4.5 4.5 0 0 1 0-8.064V5h-9.085a1.5 1.5 0 0 1-2.83 0H4v14h4.085zM9.5 11a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z",
   },
-  
 ];
 
 const sortingOptions = [
@@ -25,18 +26,20 @@ const sortingOptions = [
 export default function Collections() {
   const [currentSorting, setCurrentSorting] = useState(sortingOptions[0]);
   const [activeCategory, setActiveCategory] = useState("all");
-  const [filtered, setFiltered] = useState(collections3);
+  const [filtered, setFiltered] = useState(collections);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
+    setIsLoading(true);
     let tempfiltered = [];
-    if (activeCategory == "all") {
-      tempfiltered = collections3;
+    if (activeCategory === "all") {
+      tempfiltered = collections;
     } else {
-      tempfiltered = collections3.filter(
-        (elm) => elm.category == activeCategory
+      tempfiltered = collections.filter(
+        (elm) => elm.category === activeCategory
       );
     }
-
     setFiltered(tempfiltered);
+    setIsLoading(false);
   }, [activeCategory]);
 
   return (
@@ -127,7 +130,6 @@ export default function Collections() {
               className="dropdown-menu z-10 hidden w-full whitespace-nowrap rounded-xl bg-white py-4 px-2 text-left shadow-xl dark:bg-jacarta-800"
               aria-labelledby="categoriesSort"
             >
-          
               {sortingOptions.map((elm, i) => (
                 <button
                   onClick={() => setCurrentSorting(elm)}
@@ -153,70 +155,77 @@ export default function Collections() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-          {filtered.map((elm, i) => (
-            <article key={i}>
-              <div className="rounded-2.5xl border border-jacarta-100 bg-white p-[1.1875rem] transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
-                <Link
-                  href={`/collection/${elm.id}`}
-                  className="flex space-x-[0.625rem]"
-                >
-                  <span className="w-[74.5%]">
-                    <Image
-                      width={152}
-                      height={242}
-                      src={elm.images[0]}
-                      alt="item 1"
-                      className="h-full w-full rounded-[0.625rem] object-cover"
-                      loading="lazy"
-                    />
-                  </span>
-                  <span className="flex w-1/3 flex-col space-y-[0.625rem]">
-                    {elm.images.slice(1).map((img, i2) => (
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <h1>loading............</h1>
+            <ClipLoader />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
+            {filtered.map((elm, i) => (
+              <article key={i}>
+                <div className="rounded-2.5xl border border-jacarta-100 bg-white p-[1.1875rem] transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
+                  <Link
+                    href={`/collection/${elm.id}`}
+                    className="flex space-x-[0.625rem]"
+                  >
+                    <span className="w-[74.5%]">
                       <Image
-                        width={68}
-                        height={74}
-                        key={i2}
-                        src={img}
+                        width={152}
+                        height={242}
+                        src={elm.images[0]}
                         alt="item 1"
-                        className="h-full rounded-[0.625rem] object-cover"
+                        className="h-full w-full rounded-[0.625rem] object-cover"
                         loading="lazy"
                       />
-                    ))}
-                  </span>
-                </Link>
+                    </span>
+                    <span className="flex w-1/3 flex-col space-y-[0.625rem]">
+                      {elm.images.slice(1).map((img, i2) => (
+                        <Image
+                          width={68}
+                          height={74}
+                          key={i2}
+                          src={img}
+                          alt="item 1"
+                          className="h-full rounded-[0.625rem] object-cover"
+                          loading="lazy"
+                        />
+                      ))}
+                    </span>
+                  </Link>
 
-                <Link
-                  href={`/collection/${elm.id}`}
-                  className="mt-4 block font-display text-base text-jacarta-700 hover:text-accent dark:text-white dark:hover:text-accent"
-                >
-                  {elm.name}
-                </Link>
+                  <Link
+                    href={`/collection/${elm.id}`}
+                    className="mt-4 block font-display text-base text-jacarta-700 hover:text-accent dark:text-white dark:hover:text-accent"
+                  >
+                    {elm.name}
+                  </Link>
 
-                <div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
-                  <div className="flex flex-wrap items-center">
-                    <Link href={`/user/${elm.id}`} className="mr-2 shrink-0">
-                      <Image
-                        width={20}
-                        height={20}
-                        src={elm.avatar}
-                        alt="owner"
-                        className="h-5 w-5 rounded-full"
-                      />
-                    </Link>
-                    <span className="mr-1 dark:text-jacarta-400">by</span>
-                    <Link href={`/user/${elm.id}`} className="text-accent">
-                      <span>{elm.ownerName}</span>
-                    </Link>
+                  <div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
+                    <div className="flex flex-wrap items-center">
+                      <Link href={`/user/${elm.id}`} className="mr-2 shrink-0">
+                        <Image
+                          width={20}
+                          height={20}
+                          src={elm.avatar}
+                          alt="owner"
+                          className="h-5 w-5 rounded-full"
+                        />
+                      </Link>
+                      <span className="mr-1 dark:text-jacarta-400">by</span>
+                      <Link href={`/user/${elm.id}`} className="text-accent">
+                        <span>{elm.ownerName}</span>
+                      </Link>
+                    </div>
+                    <span className="text-sm dark:text-jacarta-300">
+                      {elm.itemCount} Items
+                    </span>
                   </div>
-                  <span className="text-sm dark:text-jacarta-300">
-                    {elm.itemCount} Items
-                  </span>
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
