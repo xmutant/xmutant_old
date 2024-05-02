@@ -54,11 +54,17 @@ export const Header = ({ translate, titleComponent }) => {
 export const Card = ({ rotate, scale, translate, users }) => {
   return (
     <motion.div style={{ rotateX: rotate, scale, boxShadow: "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003" }} className="max-w-5xl -mt-12 mx-auto h-[30rem] md:h-[40rem] w-full border-4 border-[#6C6C6C] p-6 bg-[#222222] rounded-[30px] shadow-2xl">
-      <div className="bg-gray-100 h-full w-full rounded-2xl grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 overflow-hidden p-4">
+      <div className="bg-gray-100 h-full w-full rounded-2xl grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 overflow-hidden p-2">
         {users.map((user, idx) => (
           <article key={idx}>
-            <div className="block rounded-2.5xl border border-jacarta-100 bg-white p-[1.1875rem] transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
-              <figure>
+            <div className="block rounded-2.5xl border border-jacarta-100 bg-white p-2  transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
+            <div className="absolute rounded-full text-xs font-bold bg-white px-2 py-1">
+              {user.category}
+            </div>
+
+
+              <figure className="pt-2">
+                
                 <Image
                   src={user.image}
                   alt="item"
@@ -68,12 +74,12 @@ export const Card = ({ rotate, scale, translate, users }) => {
                   loading="lazy"
                 />
               </figure>
-              <div className="mt-4 flex items-center justify-between">
-                <span className="font-display text-base text-jacarta-700 hover:text-accent dark:text-white">
-                  {user.name}
-                </span>
-               
-              </div>
+              
+              <div className="p-1">
+            <h2 className=" text-gray-500  font-semibold   text-sm">{user.collection}</h2>
+              <h3 className="  text-xs text-gray-500">{user.name}</h3>
+             
+            </div>
             
             </div>
           </article>

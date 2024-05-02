@@ -6,6 +6,7 @@ import Link from "next/link";
 export default function Page() {
   return (
     <div className="flex flex-col overflow-hidden ">
+      <div></div>
       <ContainerScroll
         users={users}
         titleComponent={
@@ -62,7 +63,7 @@ export const users = [
    
     {
       name: "Linda Anderson",
-      collection: "Beginning of the End",
+      collection: "The End",
       image: "/img/fakeNFTs/nft5.png",
       category: "Collectible",
     },
