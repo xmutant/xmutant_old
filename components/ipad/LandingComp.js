@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Page() {
   return (
     <div className="flex flex-col overflow-hidden ">
-      <div></div>
+      <div>
       <ContainerScroll
         users={users}
         titleComponent={
@@ -20,7 +20,7 @@ export default function Page() {
             </h1>
           </>
         }
-      />
+      /></div>
       <div className="flex items-center justify-center py-10 md:items-start md:py-10">
         <div className="flex space-x-4">
           <Link
@@ -84,7 +84,7 @@ export const users = [
       name: "Justin Eversano",
       collection: "Dackie on Base",
       image: "/img/fakeNFTs/nft12.png",
-      category: "Photography",
+      category: "Collectible",
     },
     {
       name: "David White",
