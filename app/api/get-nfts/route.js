@@ -42,7 +42,7 @@ export async function GET(req) {
       const contractUri = await erc721Contract.methods.contractURI().call();
 
       const totalSupply = await erc721Contract.methods.totalSupply().call();
-      const ownedTokens = [];
+      const tokens = [];
 
       for (let tokenId = 0; tokenId < totalSupply; tokenId++) {
         const tokenOwner = await erc721Contract.methods.ownerOf(tokenId).call();
@@ -50,7 +50,7 @@ export async function GET(req) {
           const tokenURI = await erc721Contract.methods
             .tokenURI(tokenId)
             .call();
-          ownedTokens.push({ tokenId, metadataURI: tokenURI });
+          tokens.push({ tokenId, metadataURI: tokenURI });
         }
       }
 
@@ -59,7 +59,7 @@ export async function GET(req) {
         name,
         symbol,
         contractUri,
-        ownedTokens,
+        tokens,
       });
     }
 

@@ -1,11 +1,45 @@
+"use client";
 import Tabs from "./Tabs";
 import { allItems } from "@/data/item";
 import Image from "next/image";
 import Link from "next/link";
 import Timer from "./Timer";
+import { useState, useEffect } from "react";
 
-export default function ItemDetails({ id }) {
+export default function ItemDetails({ tokenData, id }) {
   const item = allItems.filter((elm) => elm.id == id)[0] || allItems[0];
+  const { tokenId, metadataURI, owner } = tokenData;
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [metadata, setMetadata] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(metadataURI, {
+          method: "GET",
+        });
+        const data = await response.json();
+        setMetadata(data);
+        setImageUrl(data.image);
+      } catch (error) {
+        console.error("Error fetching metadata:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (metadataURI) {
+      fetchMetadata();
+    }
+  }, [metadataURI]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <section className="relative pt-12 pb-24 lg:py-24">
@@ -13,7 +47,7 @@ export default function ItemDetails({ id }) {
           <Image
             width={1920}
             height={789}
-            src="/img/gradient_light.jpg"
+            src={imageUrl}
             alt="gradient"
             className="h-full w-full"
           />
@@ -26,7 +60,7 @@ export default function ItemDetails({ id }) {
               <Image
                 width={540}
                 height={670}
-                src={"/img/products/item_single_large.jpg"}
+                src={imageUrl}
                 alt="item"
                 className="cursor-pointer rounded-2.5xl w-[100%]"
                 data-bs-toggle="modal"
@@ -80,7 +114,7 @@ export default function ItemDetails({ id }) {
                     href={`/collections`}
                     className="mr-2 text-sm font-bold text-accent"
                   >
-                    {"CryptoGuysNFT"}
+                    {tokenData.address}
                   </Link>
                   <span
                     className="inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-green dark:border-jacarta-600"
@@ -101,7 +135,7 @@ export default function ItemDetails({ id }) {
               </div>
 
               <h1 className="mb-4 font-display text-4xl font-semibold text-jacarta-700 dark:text-white">
-                {item.title ? item.title : "CryptoGuysNFT"}
+                {metadata.name ? metadata.name : "Loading...."}
               </h1>
 
               <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
@@ -151,10 +185,7 @@ export default function ItemDetails({ id }) {
               </div>
 
               <p className="mb-10 dark:text-jacarta-300">
-                Neque aut veniam consectetur magnam libero, natus eius numquam
-                reprehenderit hic at, excepturi repudiandae magni optio odio
-                doloribus? Facilisi lobortisal morbi fringilla urna amet sed
-                ipsum.
+                {metadata.description}
               </p>
 
               {/* Creator / Owner */}
@@ -230,7 +261,9 @@ export default function ItemDetails({ id }) {
                       Owned by
                     </span>
                     <Link href={`/user/6`} className="block text-accent">
-                      <span className="text-sm font-bold">@051_Hart</span>
+                      <span className="text-sm font-bold">
+                        {tokenData.owner}
+                      </span>
                     </Link>
                   </div>
                 </div>
@@ -334,7 +367,7 @@ export default function ItemDetails({ id }) {
           </div>
 
           {/* Tabs */}
-          <Tabs />
+          <Tabs tokenData={tokenData} />
           {/* end tabs */}
         </div>
       </section>

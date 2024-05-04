@@ -1,0 +1,38 @@
+import Web3 from "web3";
+import { NextResponse } from "next/server";
+import ERC721ABI from "../../../components/artifacts/NFTFactoryModule#ERC721Clonable.json";
+
+export async function GET(req) {
+  try {
+    // Extract the contract address and token ID from the request parameters
+    const url = new URL(req.url);
+    const searchParams = new URLSearchParams(url.searchParams);
+    const address = searchParams.get("address");
+    const tokenId = searchParams.get("tokenid");
+
+    // Connect to the Ethereum provider using web3.js
+    const web3 = new Web3("https://pre-rpc.bt.io/");
+
+    // Create an instance of the ERC721 contract using web3.js
+    const erc721Contract = new web3.eth.Contract(ERC721ABI.abi, address);
+
+    // Fetch token details
+    const tokenURI = await erc721Contract.methods.tokenURI(tokenId).call();
+    const owner = await erc721Contract.methods.ownerOf(tokenId).call();
+
+    const token = {
+      tokenId,
+      metadataURI: tokenURI,
+      owner,
+      address,
+    };
+
+    return NextResponse.json(token);
+  } catch (error) {
+    console.error("Error fetching token:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch token" },
+      { status: 500 }
+    );
+  }
+}

@@ -6,6 +6,7 @@ import Filters from "./Filters";
 // import { items2 } from "@/data/item";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Items({ item }) {
   console.log("item from Items:::::", item);
@@ -19,7 +20,7 @@ export default function Items({ item }) {
         const metadataResponse = await fetch(token.metadataURI);
         const metadata = await metadataResponse.json();
         const fullImageUrl = new URL(metadata.image, token.metadataURI).href;
-        return { ...metadata, image: fullImageUrl };
+        return { ...metadata, image: fullImageUrl, tokenId: token.tokenId };
       });
 
       const resolvedMetadata = await Promise.all(metadataPromises);
@@ -29,6 +30,8 @@ export default function Items({ item }) {
     fetchMetadata();
     tippy("[data-tippy-content]");
   }, [tokens]);
+
+  console.log(tokenMetadata);
 
   useEffect(() => {
     tippy("[data-tippy-content]");
@@ -48,6 +51,10 @@ export default function Items({ item }) {
       setAllCategories(items);
     }
   };
+  const router = useRouter();
+  const handleNavigationClick = (tokenId, contractAddress) => {
+    router.push(`/item/${tokenId}?contractAddress=${contractAddress}`);
+  };
   return (
     <>
       {/* Filters */}
@@ -59,17 +66,24 @@ export default function Items({ item }) {
         {tokenMetadata.map((metadata, i) => (
           <article key={i}>
             <div className="block rounded-2.5xl border border-jacarta-100 bg-white p-[1.1875rem] transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
-              <figure className="relative">
-                <Link href={`/item/${metadata.tokenId}`}>
-                  <Image
-                    width={230}
-                    height={230}
-                    src={metadata.image}
-                    alt="item 5"
-                    className="w-full rounded-[0.625rem]"
-                    loading="lazy"
-                  />
-                </Link>
+              <figure
+                className="relative"
+                onClick={() =>
+                  handleNavigationClick(metadata.tokenId, item.address)
+                }
+              >
+                {/* <Link
+                  href={`/item/?tokenId=${metadata.tokenId}`}
+                > */}
+                <Image
+                  width={230}
+                  height={230}
+                  src={metadata.image}
+                  alt="item 5"
+                  className="w-full rounded-[0.625rem]"
+                  loading="lazy"
+                />
+                {/* </Link> */}
                 {/* <div className="absolute top-3 right-3 flex items-center space-x-1 rounded-md bg-white p-2 dark:bg-jacarta-700">
                   <span
                     onClick={() => addLike(i)}
@@ -183,6 +197,7 @@ export default function Items({ item }) {
                 >
                   Buy now
                 </button>
+
                 <Link
                   href={`/item/${metadata.tokenId}`}
                   className="group flex items-center"
