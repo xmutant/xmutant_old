@@ -52,7 +52,8 @@ app.post("/upload", async (req, res) => {
         // return output.data;
         fs.rmdirSync("./uploads", { recursive: true });
       }
-      res.send("File uploaded and extracted successfully!");
+      // res.send("File uploaded and extracted successfully!");
+      res.json(output);
     } catch (extractionError) {
       console.log("Error extracting file:", extractionError);
       res.status(500).send(extractionError);
