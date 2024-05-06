@@ -4,10 +4,26 @@ const fs = require("fs");
 const path = require("path");
 const lighthouse = require("@lighthouse-web3/sdk");
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3027;
 const AdmZip = require("adm-zip");
 
+// Enable CORS for all domains
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.use(fileUpload());
+
+// Home route
+app.get("/", (req, res) => {
+  res.send("Welcome to the API home route!");
+});
 
 app.post("/upload", async (req, res) => {
   const file = req.files.files; // Access the file directly
@@ -36,11 +52,6 @@ app.post("/upload", async (req, res) => {
 
     // Extract the zip file contents
     try {
-      // await fs
-      //   .createReadStream(filePath)
-      //   .pipe(unzipper.Extract({ path: extractionPath }))
-      //   .promise();
-
       const zip = new AdmZip(filePath);
       zip.extractAllTo(extractionPath, true);
       console.log("Extraction complete");
@@ -49,11 +60,11 @@ app.post("/upload", async (req, res) => {
       if (extractionPath) {
         const output = await lighthouse.upload("./uploads", apiKey);
         console.log("output cid", output);
-        // return output.data;
+        // Return the output
+        res.json(output); // Assuming output is in JSON format
+        // Remove the directory after sending the response
         fs.rmdirSync("./uploads", { recursive: true });
       }
-      // res.send("File uploaded and extracted successfully!");
-      res.json(output);
     } catch (extractionError) {
       console.log("Error extracting file:", extractionError);
       res.status(500).send(extractionError);
