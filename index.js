@@ -6,6 +6,7 @@ const lighthouse = require("@lighthouse-web3/sdk");
 const app = express();
 const PORT = process.env.PORT || 3027;
 const AdmZip = require("adm-zip");
+const puppeteer = require("puppeteer");
 
 // Enable CORS for all domains
 app.use((req, res, next) => {
@@ -19,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.use(fileUpload());
-
+app.use(express.json());
 // Home route
 app.get("/", (req, res) => {
   res.send("Welcome to the API home route!");
@@ -70,6 +71,67 @@ app.post("/upload", async (req, res) => {
       res.status(500).send(extractionError);
     }
   });
+});
+
+// Route for rendering HTML page, capturing screenshot, and saving as image
+app.post("/render-and-save", async (req, res) => {
+  console.log(req.body);
+  const {
+    cid,
+    mode,
+    triggerMode,
+    resX,
+    resY,
+    delay,
+    gpu,
+    withFeatures,
+    priority,
+  } = req.body;
+
+  if (!cid) {
+    return res.status(400).send("CID not provided.");
+  }
+
+  const url = `https://gateway.lighthouse.storage/ipfs/${cid}`;
+
+  try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    // Set viewport size based on mode
+    if (mode === "VIEWPORT") {
+      await page.setViewport({ width: resX, height: resY });
+    }
+
+    await page.goto(url);
+
+    // Wait for delay if provided
+    if (delay) {
+      // await page.waitForTimeout(delay);
+      await new Promise((r) => setTimeout(r, delay));
+    }
+
+    // Capture screenshot
+    const screenshotPath = path.join(
+      __dirname,
+      "screenshots",
+      "screenshot.png"
+    );
+    await page.screenshot({
+      path: screenshotPath,
+      fullPage: mode === "FULL_PAGE",
+    });
+
+    // Close the browser
+    await browser.close();
+
+    // Send back the URL of the uploaded image
+    const imageUrl = `/uploads/screenshot.png`;
+    res.json({ imageUrl });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).send(error.message);
+  }
 });
 
 app.listen(PORT, () => {
