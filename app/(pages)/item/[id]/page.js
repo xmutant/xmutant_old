@@ -12,6 +12,8 @@ export default function ItemDetailsPage({ params }) {
   const tokenId = params.id;
   const [tokenData, setTokenData] = useState(null);
 
+  const currentUrl = process.env.NEXT_PUBLIC_URL;
+
   useEffect(() => {
     const fetchTokenData = async () => {
       try {
@@ -21,7 +23,7 @@ export default function ItemDetailsPage({ params }) {
         };
 
         const response = await fetch(
-          `/api/get-nft-item?address=${contractAddress}&tokenid=${tokenId}`,
+          `${currentUrl}/api/get-nft-item?address=${contractAddress}&tokenid=${tokenId}`,
           requestOptions
         );
         const data = await response.json();
@@ -30,8 +32,6 @@ export default function ItemDetailsPage({ params }) {
         console.error("Error fetching token data:", error);
       }
     };
-
-   
 
     if (contractAddress && tokenId) {
       fetchTokenData();

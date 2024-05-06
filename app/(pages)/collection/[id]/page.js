@@ -15,11 +15,13 @@ import { useState, useEffect } from "react";
 export default function CollectionSinglePage({ params }) {
   const [item, setItem] = useState(null);
 
+  const currentUrl = process.env.NEXT_PUBLIC_URL;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `/api/get-single-nft?address=${params.id}`
+          `${currentUrl}/api/get-single-nft?address=${params.id}`
         );
         const data = await response.json();
         setItem(data);

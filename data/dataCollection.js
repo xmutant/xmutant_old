@@ -1,8 +1,11 @@
+"use client";
 // data/collections.js
 export const collections = []; // Initialize an empty array
 
+const currentUrl = process.env.NEXT_PUBLIC_URL;
+
 // Fetch data from the API and store it in the `collections` array
-fetch("/api/get-all-collection", {
+fetch(`${currentUrl}/api/get-all-collection`, {
   method: "GET",
   redirect: "follow",
 })

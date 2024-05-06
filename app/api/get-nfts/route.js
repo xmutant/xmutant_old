@@ -1,3 +1,4 @@
+"use server";
 import Web3 from "web3";
 import { NextResponse } from "next/server";
 import NFTFactoryABI from "../../../components/artifacts/NFTFactoryModule#NFTFactory.json";

@@ -1,3 +1,4 @@
+"use server";
 import { connectToDatabase } from "../../../utlis/dbConnect";
 import { NextResponse } from "next/server";
 

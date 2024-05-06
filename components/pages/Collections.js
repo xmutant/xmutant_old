@@ -23,13 +23,14 @@ export default function Collections() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [filtered, setFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const currentUrl = process.env.NEXT_PUBLIC_URL;
 
   useEffect(() => {
     // data/collections.js
     const collections = []; // Initialize an empty array
 
     // Fetch data from the API and store it in the `collections` array
-    fetch("/api/get-all-collection", {
+    fetch(`${currentUrl}/api/get-all-collection`, {
       method: "GET",
       redirect: "follow",
     })

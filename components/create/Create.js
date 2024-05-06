@@ -96,11 +96,12 @@ export default function Create() {
       console.error("Error minting NFT:", error);
     }
   };
+  const currentUrl = process.env.NEXT_PUBLIC_URL;
 
   const fetchCollections = async () => {
     try {
       const response = await fetch(
-        `/api/get-collections?address=${address}`,
+        `${currentUrl}/api/get-collections?address=${address}`,
         requestOptions
       );
       const data = await response.json();

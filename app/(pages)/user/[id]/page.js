@@ -15,6 +15,7 @@ import { useAccount } from "wagmi";
 export default function UserPage() {
   const [item, setItem] = useState();
   const { address } = useAccount();
+  const currentUrl = process.env.NEXT_PUBLIC_URL;
   useEffect(() => {
     const fetchTokenData = async () => {
       try {
@@ -24,7 +25,7 @@ export default function UserPage() {
         };
 
         const response = await fetch(
-          `/api/get-nfts?address=${address}`,
+          `${currentUrl}/api/get-nfts?address=${address}`,
           requestOptions
         );
         const data = await response.json();

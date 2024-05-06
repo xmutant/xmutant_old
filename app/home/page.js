@@ -14,11 +14,14 @@ import CreateProfileModel from "@/components/modals/CreateprofileModel";
 export default function HomePage() {
   const { address } = useAccount();
   const [showPopup, setShowPopup] = useState(false);
+  const currentUrl = process.env.NEXT_PUBLIC_URL;
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`/api/get-profile?address=${address}`);
+        const response = await fetch(
+          `${currentUrl}/api/get-profile?address=${address}`
+        );
         const data = await response.json();
 
         if (data.success === true) {

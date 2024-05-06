@@ -1,3 +1,4 @@
+"use server";
 import Web3 from "web3";
 import { NextResponse } from "next/server";
 import ERC721ABI from "../../../components/artifacts/NFTFactoryModule#ERC721Clonable.json";
