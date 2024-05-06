@@ -95,7 +95,9 @@ app.post("/render-and-save", async (req, res) => {
   const url = `https://gateway.lighthouse.storage/ipfs/${cid}`;
 
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
     const page = await browser.newPage();
 
     // Set viewport size based on mode
@@ -126,8 +128,8 @@ app.post("/render-and-save", async (req, res) => {
     await browser.close();
 
     // Send back the URL of the uploaded image
-    const imageUrl = `/uploads/screenshot.png`;
-    res.json({ imageUrl });
+    // const imageUrl = `/uploads/screenshot.png`;
+    res.json({ screenshotPath });
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).send(error.message);
