@@ -156,6 +156,103 @@ app.get("/screenshot.png", (req, res) => {
   }
 });
 
+app.post("/preview", async (req, res) => {
+  const {
+    cidParams,
+    mode,
+    triggerMode,
+    resX,
+    resY,
+    delay,
+    gpu,
+    canvasSelector,
+    previewHash,
+    previewIteration,
+    previewMinter,
+    previewInputBytes,
+    authHash,
+    snippetVersion,
+  } = req.body;
+
+  if (!previewHash) {
+    return res.status(400).send("Preview hash not provided.");
+  }
+
+  // Construct URL with cid and additional parameters
+  const cid = `${cidParams}/?xmhash=${previewHash}&xmiteration=${previewIteration}&xmminter=${previewMinter}`;
+
+  const url = `https://gateway.lighthouse.storage/ipfs/${cid}`;
+
+  try {
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    const page = await browser.newPage();
+
+    // Set viewport size based on mode
+    if (mode === "VIEWPORT") {
+      await page.setViewport({ width: resX, height: resY });
+    }
+
+    await page.goto(url);
+
+    // Wait for delay if provided
+    if (delay) {
+      await new Promise((r) => setTimeout(r, delay));
+    }
+
+    // Capture screenshot with provided resolution
+    const screenshotPath = path.join(
+      __dirname,
+      "screenshots",
+      "screenshot.png"
+    );
+    await page.screenshot({
+      path: screenshotPath,
+      fullPage: mode === "FULL_PAGE",
+    });
+
+    // Capture screenshot with resolution 300x300
+    const screenshot300Path = path.join(
+      __dirname,
+      "screenshots",
+      "screenshot_300.png"
+    );
+    await page.setViewport({ width: 300, height: 300 });
+    await page.goto(url);
+    if (delay) {
+      await new Promise((r) => setTimeout(r, delay));
+    }
+    await page.screenshot({
+      path: screenshot300Path,
+      fullPage: mode === "FULL_PAGE",
+    });
+
+    // Close the browser
+    await browser.close();
+
+    // Upload images to Lighthouse
+    const apiKey = "9b83daf8.ccdb11e9c2aa4f2a86f5f771436c7cd2"; // Replace with your actual API key
+    const thumbnail = await lighthouse.upload(
+      "./screenshots/screenshot_300.png",
+      apiKey
+    );
+    const preview = await lighthouse.upload(
+      "./screenshots/screenshot.png",
+      apiKey
+    );
+    console.log("preview", preview);
+    // Return the CIDs of the uploaded images
+    res.json({
+      cidPreview: preview.data.Hash,
+      cidThumbnail: thumbnail.data.Hash,
+    });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).send(error.message);
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
