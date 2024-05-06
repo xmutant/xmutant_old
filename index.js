@@ -136,6 +136,26 @@ app.post("/render-and-save", async (req, res) => {
   }
 });
 
+app.get("/screenshot.png", (req, res) => {
+  const imagePath = path.join(__dirname, "screenshots", "screenshot.png");
+  console.log(imagePath);
+  // Check if the image file exists
+  if (fs.existsSync(imagePath)) {
+    // Read the image file and send it in the response
+    fs.readFile(imagePath, (err, data) => {
+      if (err) {
+        console.error("Error reading image:", err);
+        res.status(500).send("Error reading image");
+      } else {
+        res.setHeader("Content-Type", "image/png");
+        res.send(data);
+      }
+    });
+  } else {
+    res.status(404).send("Image not found");
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
