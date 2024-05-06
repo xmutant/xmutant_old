@@ -1,6 +1,6 @@
-'use client'
+"use client";
 import "../public/styles/style.css";
-import '@rainbow-me/rainbowkit/styles.css';
+import "@rainbow-me/rainbowkit/styles.css";
 import "swiper/css";
 import "tippy.js/dist/tippy.css";
 import "react-modal-video/css/modal-video.css";
@@ -10,12 +10,12 @@ import PropertiesModal from "@/components/modals/PropertiesModal";
 import ModeChanger from "@/components/common/ModeChanger";
 import { Providers } from "./provider";
 
-  if (typeof window !== 'undefined') {
-    // Import the script only on the client side
-    import('bootstrap/dist/js/bootstrap.esm').then((module) => {
-      // Module is imported, you can access any exported functionality here
-    });
-  }
+if (typeof window !== "undefined") {
+  // Import the script only on the client side
+  import("bootstrap/dist/js/bootstrap.esm").then((module) => {
+    // Module is imported, you can access any exported functionality here
+  });
+}
 
 export default function RootLayout({ children }) {
   return (
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
         <ModeChanger />
         <Providers>
           {children}
-          <BuyModal />
+          {/* <BuyModal /> */}
           <BidModal />
           <PropertiesModal />
         </Providers>

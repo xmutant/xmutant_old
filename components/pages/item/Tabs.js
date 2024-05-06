@@ -130,7 +130,7 @@ export default function Tabs({ tokenData }) {
             role="tabpanel"
             aria-labelledby="offers-tab"
           >
-            <Offers />
+            {tokenData ? <Offers tokenData={tokenData} /> : null}
           </div>
 
           {/* Properties */}

@@ -1,13 +1,62 @@
 /* eslint-disable react/no-unescaped-entities */
-export default function BidModal({ onClose }) {
+"use client";
+import { useBalance, useAccount } from "wagmi";
+import NFTMarketplaceABI from "@/components/artifacts/NFTMarketplace.json";
+import { Toaster, toast } from "react-hot-toast";
+import { useState, useEffect } from "react";
+import { ethers } from "ethers";
+
+export default function NewBidModal({ onClose, tokenData }) {
+  //    const [provider, setProvider] = useState(null);
+
+  const [bidAmount, setBidAmount] = useState("");
+
+  const handleBidAmountChange = (e) => {
+    setBidAmount(e.target.value);
+  };
+
+  const placeBid = async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        NFTMarketplaceABI.address,
+        NFTMarketplaceABI.abi,
+        signer
+      );
+      const parsedBidAmount = ethers.utils.parseEther(bidAmount).toString();
+      console.log(parsedBidAmount);
+      const marketId = tokenData.activityLog.find(
+        (activity) => activity.activityType === 2
+      ).marketId; // Assuming tokenData contains the marketId
+
+      console.log(marketId);
+
+      const gasLimit = 3000000;
+
+      const tx = await contract.placeBid(marketId, bidAmount, {
+        value: parsedBidAmount,
+        gasLimit: gasLimit,
+      });
+      await tx.wait();
+      toast.success(`Bid placed successfully!`);
+      console.log("Bid placed successfully!");
+      onClose(); // Close the modal after successful bid
+    } catch (error) {
+      toast.error(`ahhann there might be some error `);
+      console.error("Error placing bid:", error);
+    }
+  };
   return (
     <div>
       <div
         className="modal fade show"
         id="placeBidModal"
-        // tabIndex="-1"
-        // aria-labelledby="placeBidLabel"
-        // aria-hidden="true"
+        tabIndex="-1"
+        aria-labelledby="placeBidLabel"
+        aria-hidden="false"
+        style={{ display: "block" }}
       >
         <div className="modal-dialog max-w-2xl">
           <div className="modal-content">
@@ -18,7 +67,7 @@ export default function BidModal({ onClose }) {
               <button
                 type="button"
                 className="btn-close"
-                data-bs-dismiss="modal"
+                onClick={onClose}
                 aria-label="Close"
               >
                 <svg
@@ -51,7 +100,6 @@ export default function BidModal({ onClose }) {
                       x="0"
                       y="0"
                       viewBox="0 0 1920 1920"
-                      // xml:space="preserve"
                       className="mr-1 h-5 w-5"
                     >
                       <path
@@ -77,26 +125,28 @@ export default function BidModal({ onClose }) {
                     </svg>
                   </span>
                   <span className="font-display text-sm text-jacarta-700">
-                    ETH
+                    BTT
                   </span>
                 </div>
 
                 <input
-                  type="text"
+                  type="number"
                   className="h-12 w-full flex-[3] border-0 focus:ring-inset focus:ring-accent"
                   placeholder="Amount"
-                  defaultValue="0.05"
+                  value={bidAmount}
+                  onChange={handleBidAmountChange}
+                  defaultValue="1500"
                 />
 
                 <div className="flex flex-1 justify-end self-stretch border-l border-jacarta-100 bg-jacarta-50">
-                  <span className="self-center px-2 text-sm">$130.82</span>
+                  <span className="self-center px-2 text-sm">
+                    HeigestBid {tokenData.highestBid} BTT
+                  </span>
                 </div>
               </div>
 
               <div className="text-right">
-                <span className="text-sm dark:text-jacarta-400">
-                  Balance: 0.0000 WETH
-                </span>
+                <span className="text-sm dark:text-jacarta-400">Balance:</span>
               </div>
 
               {/* Terms */}
@@ -123,6 +173,7 @@ export default function BidModal({ onClose }) {
               <div className="flex items-center justify-center space-x-4">
                 <button
                   type="button"
+                  onClick={placeBid}
                   className="rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark"
                 >
                   Place Bid

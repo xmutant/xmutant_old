@@ -3,18 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { collections } from "@/data/dataCollection";
-import { ClipLoader } from "react-spinners";
+// import { collections } from "@/data/dataCollection";
+import { ClipLoader, GridLoader } from "react-spinners";
 const categories = [
   {
     id: 1,
     name: "Generative Art",
     icon: "M12 2c5.522 0 10 3.978 10 8.889a5.558 5.558 0 0 1-5.556 5.555h-1.966c-.922 0-1.667.745-1.667 1.667 0 .422.167.811.422 1.1.267.3.434.689.434 1.122C13.667 21.256 12.9 22 12 22 6.478 22 2 17.522 2 12S6.478 2 12 2zm-1.189 16.111a3.664 3.664 0 0 1 3.667-3.667h1.966A3.558 3.558 0 0 0 20 10.89C20 7.139 16.468 4 12 4a8 8 0 0 0-.676 15.972 3.648 3.648 0 0 1-.513-1.86z",
-  },
-  {
-    id: 2,
-    name: "Collectibles",
-    icon: "M2 4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v5.5a2.5 2.5 0 1 0 0 5V20a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4zm6.085 15a1.5 1.5 0 0 1 2.83 0H20v-2.968a4.5 4.5 0 0 1 0-8.064V5h-9.085a1.5 1.5 0 0 1-2.83 0H4v14h4.085zM9.5 11a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z",
   },
 ];
 
@@ -26,20 +21,88 @@ const sortingOptions = [
 export default function Collections() {
   const [currentSorting, setCurrentSorting] = useState(sortingOptions[0]);
   const [activeCategory, setActiveCategory] = useState("all");
-  const [filtered, setFiltered] = useState(collections);
-  const [isLoading, setIsLoading] = useState(false);
+  const [filtered, setFiltered] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    setIsLoading(true);
+    // data/collections.js
+    const collections = []; // Initialize an empty array
+
+    // Fetch data from the API and store it in the `collections` array
+    fetch("/api/get-all-collection", {
+      method: "GET",
+      redirect: "follow",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const metadataPromises = [];
+
+        data.forEach((collection) => {
+          const { address, name, symbol, contractUri, tokens } = collection;
+          const ownerName = symbol; // Assuming the symbol represents the owner name
+          const avatar = "/images/avatars/avatar.jpg"; // Placeholder avatar image
+
+          const tokenMetadataPromises = tokens.map((token) => {
+            const metadataURI = token.metadataURI;
+            return fetch(metadataURI)
+              .then((response) => response.json())
+              .then((metadata) => {
+                const { name, description, image, external_url } = metadata;
+                return {
+                  tokenId: token.tokenId,
+                  name,
+                  description,
+                  image,
+                  external_url,
+                };
+              })
+              .catch((error) =>
+                console.error(
+                  `Error fetching metadata for ${metadataURI}:`,
+                  error
+                )
+              );
+          });
+
+          metadataPromises.push(
+            Promise.all(tokenMetadataPromises).then((tokenMetadata) => {
+              const formattedCollection = {
+                id: address,
+                name,
+                ownerName,
+                avatar,
+                itemCount: tokens.length,
+                images: tokenMetadata.map((metadata) => metadata.image),
+                tokenMetadata,
+              };
+              return formattedCollection;
+            })
+          );
+        });
+
+        Promise.all(metadataPromises)
+          .then((formattedCollections) => {
+            formattedCollections.forEach((collection) =>
+              collections.push(collection)
+            );
+            setFiltered(collections);
+            setIsLoading(false);
+          })
+          .catch((error) => console.error("Error fetching metadata:", error));
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    // setIsLoading(true);
+
     let tempfiltered = [];
     if (activeCategory === "all") {
-      tempfiltered = collections;
+      tempfiltered = filtered;
     } else {
-      tempfiltered = collections.filter(
-        (elm) => elm.category === activeCategory
-      );
+      tempfiltered = filtered.filter((elm) => elm.category === activeCategory);
     }
     setFiltered(tempfiltered);
-    setIsLoading(false);
   }, [activeCategory]);
 
   return (
@@ -157,73 +220,76 @@ export default function Collections() {
 
         {isLoading ? (
           <div className="flex justify-center items-center">
-            <h1>loading............</h1>
-            <ClipLoader />
+            <GridLoader color="#3396FF" />
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-            {filtered.map((elm, i) => (
-              <article key={i}>
-                <div className="rounded-2.5xl border border-jacarta-100 bg-white p-[1.1875rem] transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
-                  <Link
-                    href={`/collection/${elm.id}`}
-                    className="flex space-x-[0.625rem]"
-                  >
-                    <span className="w-[74.5%]">
-                      <Image
-                        width={152}
-                        height={242}
-                        src={elm.images[0]}
-                        alt="item 1"
-                        className="h-full w-full rounded-[0.625rem] object-cover"
-                        loading="lazy"
-                      />
-                    </span>
-                    <span className="flex w-1/3 flex-col space-y-[0.625rem]">
-                      {elm.images.slice(1).map((img, i2) => (
+            {filtered.length > 0 &&
+              filtered.map((elm, i) => (
+                <article key={i}>
+                  <div className="rounded-2.5xl border border-jacarta-100 bg-white p-[1.1875rem] transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
+                    <Link
+                      href={`/collection/${elm.id}`}
+                      className="flex space-x-[0.625rem]"
+                    >
+                      <span className="w-[74.5%]">
                         <Image
-                          width={68}
-                          height={74}
-                          key={i2}
-                          src={img}
+                          width={152}
+                          height={242}
+                          src={elm.images[0]}
                           alt="item 1"
-                          className="h-full rounded-[0.625rem] object-cover"
+                          className="h-full w-full rounded-[0.625rem] object-cover"
                           loading="lazy"
                         />
-                      ))}
-                    </span>
-                  </Link>
+                      </span>
+                      <span className="flex w-1/3 flex-col space-y-[0.625rem]">
+                        {elm.images.slice(1).map((img, i2) => (
+                          <Image
+                            width={68}
+                            height={74}
+                            key={i2}
+                            src={img}
+                            alt="item 1"
+                            className="h-full rounded-[0.625rem] object-cover"
+                            loading="lazy"
+                          />
+                        ))}
+                      </span>
+                    </Link>
 
-                  <Link
-                    href={`/collection/${elm.id}`}
-                    className="mt-4 block font-display text-base text-jacarta-700 hover:text-accent dark:text-white dark:hover:text-accent"
-                  >
-                    {elm.name}
-                  </Link>
+                    <Link
+                      href={`/collection/${elm.id}`}
+                      className="mt-4 block font-display text-base text-jacarta-700 hover:text-accent dark:text-white dark:hover:text-accent"
+                    >
+                      {elm.name}
+                    </Link>
 
-                  <div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
-                    <div className="flex flex-wrap items-center">
-                      <Link href={`/user/${elm.id}`} className="mr-2 shrink-0">
-                        <Image
-                          width={20}
-                          height={20}
-                          src={elm.avatar}
-                          alt="owner"
-                          className="h-5 w-5 rounded-full"
-                        />
-                      </Link>
-                      <span className="mr-1 dark:text-jacarta-400">by</span>
-                      <Link href={`/user/${elm.id}`} className="text-accent">
-                        <span>{elm.ownerName}</span>
-                      </Link>
+                    <div className="mt-2 flex items-center justify-between text-sm font-medium tracking-tight">
+                      <div className="flex flex-wrap items-center">
+                        <Link
+                          href={`/user/${elm.id}`}
+                          className="mr-2 shrink-0"
+                        >
+                          <Image
+                            width={20}
+                            height={20}
+                            src={elm.avatar}
+                            alt="owner"
+                            className="h-5 w-5 rounded-full"
+                          />
+                        </Link>
+                        <span className="mr-1 dark:text-jacarta-400">by</span>
+                        <Link href={`/user/${elm.id}`} className="text-accent">
+                          <span>{elm.ownerName}</span>
+                        </Link>
+                      </div>
+                      <span className="text-sm dark:text-jacarta-300">
+                        {elm.itemCount} Items
+                      </span>
                     </div>
-                    <span className="text-sm dark:text-jacarta-300">
-                      {elm.itemCount} Items
-                    </span>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
           </div>
         )}
       </div>

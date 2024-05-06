@@ -19,7 +19,7 @@ export default function CollectionSinglePage({ params }) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/get-single-nft?address=${params.id}`
+          `/api/get-single-nft?address=${params.id}`
         );
         const data = await response.json();
         setItem(data);

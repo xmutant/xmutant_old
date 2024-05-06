@@ -22,7 +22,7 @@ const useProfileUpdate = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/profile",
+        "/api/profile",
         requestOptions
       );
       const result = await response.text();

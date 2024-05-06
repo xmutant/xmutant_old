@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import { NextResponse } from "next/server";
 import ERC721ABI from "../../../components/artifacts/NFTFactoryModule#ERC721Clonable.json";
+import MarketPlaceAbi from "@/components/artifacts/NFTMarketplace.json";
 
 export async function GET(req) {
   try {
@@ -14,6 +15,11 @@ export async function GET(req) {
 
     // Create an instance of the ERC721 contract using web3.js
     const erc721Contract = new web3.eth.Contract(ERC721ABI.abi, address);
+
+    const marketplaceContract = new web3.eth.Contract(
+      MarketPlaceAbi.abi,
+      MarketPlaceAbi.address
+    );
 
     // Fetch contract details
     const name = await erc721Contract.methods.name().call();
@@ -39,13 +45,20 @@ export async function GET(req) {
 
     const uniqueOwners = Object.keys(owners).length;
     const tokens = [];
-
     // Iterate over the tokenIds and fetch their details
-    for (let tokenId = 0; tokenId < totalSupply; tokenId++) {
+    // Iterate over the tokenIds and fetch their details
+    for (let tokenId = 0; tokenId < Number(totalSupply); tokenId++) {
       const tokenURI = await erc721Contract.methods.tokenURI(tokenId).call();
-      tokens.push({ tokenId, metadataURI: tokenURI });
-    }
+      const isListed = await marketplaceContract.methods
+        .isNFTListed(address, tokenId)
+        .call();
 
+      tokens.push({
+        tokenId: tokenId.toString(),
+        metadataURI: tokenURI,
+        isListed,
+      });
+    }
     const collection = {
       address: address,
       name,

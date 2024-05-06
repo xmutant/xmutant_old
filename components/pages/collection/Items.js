@@ -20,7 +20,12 @@ export default function Items({ item }) {
         const metadataResponse = await fetch(token.metadataURI);
         const metadata = await metadataResponse.json();
         const fullImageUrl = new URL(metadata.image, token.metadataURI).href;
-        return { ...metadata, image: fullImageUrl, tokenId: token.tokenId };
+        return {
+          ...metadata,
+          image: fullImageUrl,
+          tokenId: token.tokenId,
+          isListed: token.isListed,
+        };
       });
 
       const resolvedMetadata = await Promise.all(metadataPromises);
@@ -190,13 +195,24 @@ export default function Items({ item }) {
               </div>
 
               <div className="mt-8 flex items-center justify-between">
-                <button
-                  className="font-display text-sm font-semibold text-accent"
-                  data-bs-toggle="modal"
-                  data-bs-target="#buyNowModal"
-                >
-                  Buy now
-                </button>
+                {metadata.isListed === true ? (
+                  <button
+                    className="font-display text-sm font-semibold text-accent"
+                    data-bs-toggle="modal"
+                    data-bs-target="#buyNowModal"
+                  >
+                    Buy now
+                  </button>
+                ) : (
+                  <button
+                    className="font-display text-sm font-semibold text-accent"
+                    data-bs-toggle="modal"
+                    data-bs-target="#buyNowModal"
+                    disabled
+                  >
+                    Not Listed
+                  </button>
+                )}
 
                 <Link
                   href={`/item/${metadata.tokenId}`}
