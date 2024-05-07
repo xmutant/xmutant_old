@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 import { Toaster, toast } from "react-hot-toast";
 import ERC721Abi from "@/components/artifacts/NFTFactoryModule#ERC721Clonable.json";
 import { ClipLoader } from "react-spinners";
+import Link from "next/link";
 
 const currencies = [
   {
@@ -258,52 +259,51 @@ export default function Create() {
                 aria-labelledby="item-collection"
               >
                 <ul className="scrollbar-custom flex max-h-48 flex-col overflow-y-auto">
-                  {collections.length > 0 ? (
-                    collections.map((collection, i) => (
-                      <li
-                        key={i}
-                        onClick={() => setCurrcentCollection(collection)}
-                      >
-                        <div
-                          className={
-                            collection === currcentCollection
-                              ? "cursor-pointer dropdown-item flex w-full items-center justify-between rounded-xl px-5 py-2 text-left font-display text-sm transition-colors hover:bg-jacarta-50 dark:text-white dark:hover:bg-jacarta-600"
-                              : " cursor-pointer dropdown-item flex w-full items-center rounded-xl px-5 py-2 text-left font-display text-sm transition-colors hover:bg-jacarta-50 dark:text-white dark:hover:bg-jacarta-600"
-                          }
+                  {collections.length > 0
+                    ? collections.map((collection, i) => (
+                        <li
+                          key={i}
+                          onClick={() => setCurrcentCollection(collection)}
                         >
-                          <span className="flex items-center space-x-3">
-                            <Image
-                              width={64}
-                              height={64}
-                              src={collection.contractUri}
-                              alt={collection.name}
-                              className="h-8 w-8 rounded-full"
-                              loading="lazy"
-                            />
-                            <span className="text-jacarta-700 dark:text-white">
-                              {collection.name} {collection.symbol}
+                          <div
+                            className={
+                              collection === currcentCollection
+                                ? "cursor-pointer dropdown-item flex w-full items-center justify-between rounded-xl px-5 py-2 text-left font-display text-sm transition-colors hover:bg-jacarta-50 dark:text-white dark:hover:bg-jacarta-600"
+                                : " cursor-pointer dropdown-item flex w-full items-center rounded-xl px-5 py-2 text-left font-display text-sm transition-colors hover:bg-jacarta-50 dark:text-white dark:hover:bg-jacarta-600"
+                            }
+                          >
+                            <span className="flex items-center space-x-3">
+                              <Image
+                                width={64}
+                                height={64}
+                                src={collection.contractUri}
+                                alt={collection.name}
+                                className="h-8 w-8 rounded-full"
+                                loading="lazy"
+                              />
+                              <span className="text-jacarta-700 dark:text-white">
+                                {collection.name} {collection.symbol}
+                              </span>
                             </span>
-                          </span>
-                          {currcentCollection === collection && (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              width="24"
-                              height="24"
-                              className="mb-[3px] h-4 w-4 fill-accent"
-                            >
-                              <path fill="none" d="M0 0h24v24H0z"></path>
-                              <path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
-                            </svg>
-                          )}
-                        </div>
-                      </li>
-                    ))
-                  ) : (
-                    <li className="text-center text-jacarta-700 dark:text-white">
-                      No collections found
-                    </li>
-                  )}
+                            {currcentCollection === collection && (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                height="24"
+                                className="mb-[3px] h-4 w-4 fill-accent"
+                              >
+                                <path fill="none" d="M0 0h24v24H0z"></path>
+                                <path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
+                              </svg>
+                            )}
+                          </div>
+                        </li>
+                      ))
+                    : null}
+                  <li className="text-center text-jacarta-700 dark:text-white">
+                    <Link href="/create-collection">Create New Collection</Link>
+                  </li>
                 </ul>
               </div>
             </div>

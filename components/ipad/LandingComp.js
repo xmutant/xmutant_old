@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { ContainerScroll } from "./ContainerScroll";
 import Link from "next/link";

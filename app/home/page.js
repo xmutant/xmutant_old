@@ -1,5 +1,5 @@
-"use client";
-import { useState, useEffect } from "react";
+// "use client";
+// import { useState, useEffect } from "react";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import Categories from "@/components/home/Categories";
@@ -8,36 +8,36 @@ import Hero from "@/components/home/Hero";
 import Hotbids from "@/components/home/Hotbids";
 import Process from "@/components/home/Process";
 import Link from "next/link";
-import { useAccount } from "wagmi";
-import CreateProfileModel from "@/components/modals/CreateprofileModel";
+// import { useAccount } from "wagmi";
+// import CreateProfileModel from "@/components/modals/CreateprofileModel";
 
 export default function HomePage() {
-  const { address } = useAccount();
-  const [showPopup, setShowPopup] = useState(false);
-  const currentUrl = process.env.NEXT_PUBLIC_URL;
+  // const { address } = useAccount();
+  // const [showPopup, setShowPopup] = useState(false);
+  // const currentUrl = process.env.NEXT_PUBLIC_URL;
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await fetch(
-          `${currentUrl}/api/get-profile?address=${address}`
-        );
-        const data = await response.json();
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `${currentUrl}/api/get-profile?address=${address}`
+  //       );
+  //       const data = await response.json();
 
-        if (data.success === true) {
-          setShowPopup(false);
-        } else if (data.success === false) {
-          setShowPopup(true);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  //       if (data.success === true) {
+  //         setShowPopup(false);
+  //       } else if (data.success === false) {
+  //         setShowPopup(true);
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
-    if (address) {
-      fetchProfile();
-    }
-  }, [address]);
+  //   if (address) {
+  //     fetchProfile();
+  //   }
+  // }, [address]);
 
   return (
     <>
@@ -50,7 +50,7 @@ export default function HomePage() {
         <Process />
       </main>
       <Footer />
-      {showPopup && <CreateProfileModel onClose={() => setShowPopup(false)} />}
+      {/* {showPopup && <CreateProfileModel onClose={() => setShowPopup(false)} />} */}
     </>
   );
 }

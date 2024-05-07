@@ -3,6 +3,7 @@ import CopyToClipboard from "@/utlis/AddClipboard";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import tippy from "tippy.js";
+import { useAccount, useBalance } from "wagmi";
 const languages = ["English", "Español", "Deutsch"];
 export default function Profile() {
   const [activeLanguage, setActiveLanguage] = useState(languages[0]);
@@ -10,6 +11,12 @@ export default function Profile() {
     tippy("[data-tippy-content]");
     new CopyToClipboard();
   }, []);
+
+  const { address } = useAccount();
+  const balance = useBalance({
+    address: address ? address : null,
+  });
+  console.log(balance);
   return (
     <div className="js-nav-dropdown group-dropdown relative">
       <button
@@ -39,7 +46,7 @@ export default function Profile() {
           data-tippy-content="Copy"
         >
           <span className="max-w-[10rem] overflow-hidden text-ellipsis">
-            0x7a86c0b064171007716bbd6af96676935799a63e
+            {address ? address : ""}
           </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +89,9 @@ export default function Profile() {
               <path fill="#8A92B2" d="M420.1 1078.7l539.7 760.6v-441.7z"></path>
               <path fill="#62688F" d="M959.8 1397.6v441.7l540.1-760.6z"></path>
             </svg>
-            <span className="text-lg font-bold text-green">10 ETH</span>
+            <span className="text-lg font-bold text-green">
+              {balance?.data?.formatted} {balance?.data?.symbol}
+            </span>
           </div>
         </div>
         <Link
@@ -121,8 +130,6 @@ export default function Profile() {
             Edit Profile
           </span>
         </Link>
-        
-       
       </div>
     </div>
   );

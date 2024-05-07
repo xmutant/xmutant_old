@@ -1,6 +1,7 @@
 "use client";
 import "../public/styles/style.css";
 import "@rainbow-me/rainbowkit/styles.css";
+import "../app/styles/globals.scss";
 import "swiper/css";
 import "tippy.js/dist/tippy.css";
 import "react-modal-video/css/modal-video.css";
