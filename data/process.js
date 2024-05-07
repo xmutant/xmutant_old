@@ -1,4 +1,3 @@
-
 export const processes = [
   {
     id: 1,
@@ -25,11 +24,10 @@ export const processes = [
     backgroundColor: "#CDDFFB",
     iconSrc: "/img/process/process7.svg",
     alt: "process",
-    bgClass: "bg-red",
+    bgClass: "bg-accent",
     title: "3. Generate Your NFTs from the Collection",
     description:
-      "lorem ipsum",
-   
+      "Go to explore page and click on any generative art collection and select your variation to mint that as NFT.",
   },
   {
     id: 4,
@@ -37,7 +35,7 @@ export const processes = [
     iconSrc: "/img/process/process8.svg",
     alt: "process",
     title: "4. List Them For Sale",
-    bgClass: "bg-red",
+    bgClass: "bg-green",
     description:
       "Choose between auctions, fixed-price listings, and declining-price listings. You choose how you want to sell your NFTs!",
   },

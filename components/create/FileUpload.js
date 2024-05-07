@@ -1,9 +1,15 @@
 "use client";
 import React, { useState } from "react";
-export default function FileUpload() {
+import useNewFileUpload from "../Hooks/useNewFileUpload";
+
+export default function FileUpload({ onFileUpload }) {
   const [image, setImage] = useState(null);
   const [imageName, setImageName] = useState("");
   const [dragging, setDragging] = useState(false);
+
+  // Import the useFileUpload hook
+  const { uploadFiles, uploadedFileUrls, isUploading, error } =
+    useNewFileUpload();
 
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -19,31 +25,38 @@ export default function FileUpload() {
     setDragging(false);
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault();
-    setDragging(false);
     const file = e.dataTransfer.files[0];
+    console.log(file);
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result);
-        setImageName(file.name); // Set the image name
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Upload the file using the uploadFiles function from the hook
+        const urls = await uploadFiles([file]);
+        // Pass the URL to the parent component
+        console.log("file from importHook", uploadedFileUrls);
+        console.log("urls from File Upload", urls);
+        onFileUpload(urls[0]);
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
     }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result);
-        setImageName(file.name); // Set the image name
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Upload the file using the uploadFiles function from the hook
+        const [url] = await uploadFiles([file]); // Destructure the return value to get the URL
+        // Pass the URL to the parent component
+        onFileUpload(url);
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
     }
   };
+
   return (
     <div className="mb-6">
       <label className="mb-2 block font-display text-jacarta-700 dark:text-white">
@@ -56,7 +69,6 @@ export default function FileUpload() {
           <span className="text-green">Successfully Uploaded {imageName}</span>
         )}
       </p>
-
       <div
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
@@ -64,7 +76,6 @@ export default function FileUpload() {
         onDrop={handleDrop}
         style={{
           border: dragging ? "2px dashed #000" : "",
-
           borderRadius: "5px",
         }}
         className="group relative flex max-w-md flex-col items-center justify-center rounded-lg border-2 border-dashed border-jacarta-100 bg-white py-20 px-5 text-center dark:border-jacarta-600 dark:bg-jacarta-700"
@@ -87,11 +98,6 @@ export default function FileUpload() {
         </div>
         <div className="absolute inset-4 cursor-pointer rounded bg-jacarta-50 opacity-0 group-hover:opacity-100 dark:bg-jacarta-600"></div>
         <div></div>
-        {/* {image && (
-          <div className="absolute inset-4 cursor-pointer rounded">
-            <Image className="h-[100%] object-cover" src={image} alt="image" />
-          </div>
-        )} */}
         <input
           type="file"
           accept="image/*,video/*,audio/*,webgl/*,.glb,.gltf"
@@ -100,6 +106,14 @@ export default function FileUpload() {
           className="absolute inset-0 z-20 cursor-pointer opacity-0"
         />
       </div>
+      {/* Display uploaded file URLs */}
+      {uploadedFileUrls.map((url) => (
+        <div key={url}>Uploaded File: {url}</div>
+      ))}
+      {/* Display upload status */}
+      {isUploading && <div>Uploading...</div>}
+      {/* Display error message */}
+      {error && <div>Error: {error}</div>}
     </div>
   );
 }

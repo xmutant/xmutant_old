@@ -3,12 +3,40 @@
 import { useEffect, useState } from "react";
 import tippy from "tippy.js";
 import Filters from "./Filters";
-import { items2 } from "@/data/item";
+// import { items2 } from "@/data/item";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-export default function Items() {
-  const [allCategories, setAllCategories] = useState(items2);
+export default function Items({ item }) {
+  console.log("item from Items:::::", item);
+  const [tokenMetadata, setTokenMetadata] = useState([]);
+  // const [allCategories, setAllCategories] = useState(items2);
+
+  const { address, name, symbol, contractUri, tokens } = item;
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      const metadataPromises = tokens.map(async (token) => {
+        const metadataResponse = await fetch(token.metadataURI);
+        const metadata = await metadataResponse.json();
+        const fullImageUrl = new URL(metadata.image, token.metadataURI).href;
+        return {
+          ...metadata,
+          image: fullImageUrl,
+          tokenId: token.tokenId,
+          isListed: token.isListed,
+        };
+      });
+
+      const resolvedMetadata = await Promise.all(metadataPromises);
+      setTokenMetadata(resolvedMetadata);
+    };
+
+    fetchMetadata();
+    tippy("[data-tippy-content]");
+  }, [tokens]);
+
+  console.log(tokenMetadata);
 
   useEffect(() => {
     tippy("[data-tippy-content]");
@@ -28,6 +56,10 @@ export default function Items() {
       setAllCategories(items);
     }
   };
+  const router = useRouter();
+  const handleNavigationClick = (tokenId, contractAddress) => {
+    router.push(`/item/${tokenId}?contractAddress=${contractAddress}`);
+  };
   return (
     <>
       {/* Filters */}
@@ -36,21 +68,28 @@ export default function Items() {
 
       {/* Grid */}
       <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-        {items2.map((elm, i) => (
+        {tokenMetadata.map((metadata, i) => (
           <article key={i}>
             <div className="block rounded-2.5xl border border-jacarta-100 bg-white p-[1.1875rem] transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
-              <figure className="relative">
-                <Link href={`/item/${elm.id}`}>
-                  <Image
-                    width={230}
-                    height={230}
-                    src={elm.imageSrc}
-                    alt="item 5"
-                    className="w-full rounded-[0.625rem]"
-                    loading="lazy"
-                  />
-                </Link>
-                <div className="absolute top-3 right-3 flex items-center space-x-1 rounded-md bg-white p-2 dark:bg-jacarta-700">
+              <figure
+                className="relative"
+                onClick={() =>
+                  handleNavigationClick(metadata.tokenId, item.address)
+                }
+              >
+                {/* <Link
+                  href={`/item/?tokenId=${metadata.tokenId}`}
+                > */}
+                <Image
+                  width={230}
+                  height={230}
+                  src={metadata.image}
+                  alt="item 5"
+                  className="w-full rounded-[0.625rem]"
+                  loading="lazy"
+                />
+                {/* </Link> */}
+                {/* <div className="absolute top-3 right-3 flex items-center space-x-1 rounded-md bg-white p-2 dark:bg-jacarta-700">
                   <span
                     onClick={() => addLike(i)}
                     className={`js-likes relative cursor-pointer before:absolute before:h-4 before:w-4 before:bg-[url('../img/heart-fill.svg')] before:bg-cover before:bg-center before:bg-no-repeat before:opacity-0 ${
@@ -72,14 +111,14 @@ export default function Items() {
                   <span className="text-sm dark:text-jacarta-200">
                     {elm.likes}
                   </span>
-                </div>
+                </div> */}
                 <div className="absolute left-3 -bottom-3">
                   <div className="flex -space-x-2">
                     <a href="#">
                       <Image
                         width={20}
                         height={20}
-                        src={elm.creatorAvatar}
+                        src={item.contractUri}
                         alt="creator"
                         className="h-6 w-6 rounded-full border-2 border-white hover:border-accent dark:border-jacarta-600 dark:hover:border-accent"
                         data-tippy-content="Creator: Sussygirl"
@@ -89,7 +128,7 @@ export default function Items() {
                       <Image
                         width={20}
                         height={20}
-                        src={elm.ownerAvatar}
+                        src={item.contractUri}
                         alt="owner"
                         className="h-6 w-6 rounded-full border-2 border-white hover:border-accent dark:border-jacarta-600 dark:hover:border-accent"
                         data-tippy-content="Owner: Sussygirl"
@@ -99,9 +138,9 @@ export default function Items() {
                 </div>
               </figure>
               <div className="mt-7 flex items-center justify-between">
-                <Link href={`/item/${elm.id}`}>
+                <Link href={`/item/${metadata.tokenId}`}>
                   <span className="font-display text-base text-jacarta-700 hover:text-accent dark:text-white">
-                    {elm.title}
+                    {metadata.name}
                   </span>
                 </Link>
                 <div className="dropup rounded-full hover:bg-jacarta-100 dark:hover:bg-jacarta-600">
@@ -148,23 +187,35 @@ export default function Items() {
               </div>
               <div className="mt-2 text-sm">
                 <span className="mr-1 text-jacarta-700 dark:text-jacarta-200">
-                  {elm.price}
+                  {/* {elm.price} */} N/A
                 </span>
                 <span className="text-jacarta-500 dark:text-jacarta-300">
-                  {elm.bidCount}
+                  {/* {elm.bidCount} */} N/A
                 </span>
               </div>
 
               <div className="mt-8 flex items-center justify-between">
-                <button
-                  className="font-display text-sm font-semibold text-accent"
-                  data-bs-toggle="modal"
-                  data-bs-target="#buyNowModal"
-                >
-                  Buy now
-                </button>
+                {metadata.isListed === true ? (
+                  <button
+                    className="font-display text-sm font-semibold text-accent"
+                    data-bs-toggle="modal"
+                    data-bs-target="#buyNowModal"
+                  >
+                    Buy now
+                  </button>
+                ) : (
+                  <button
+                    className="font-display text-sm font-semibold text-accent"
+                    data-bs-toggle="modal"
+                    data-bs-target="#buyNowModal"
+                    disabled
+                  >
+                    Not Listed
+                  </button>
+                )}
+
                 <Link
-                  href={`/item/${elm.id}`}
+                  href={`/item/${metadata.tokenId}`}
                   className="group flex items-center"
                 >
                   <svg

@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import tippy from "tippy.js";
-import Socials from "../collection/Socials";
+// import Socials from "../user/";
 import CopyToClipboard from "@/utlis/AddClipboard";
 import Image from "next/image";
+import { useAccount } from "wagmi";
 
 export default function Profile() {
   const [loved, setLoved] = useState();
+  const { address } = useAccount();
 
   useEffect(() => {
     tippy("[data-tippy-content]");
@@ -83,7 +85,7 @@ export default function Profile() {
               className="js-copy-clipboard max-w-[10rem] select-none overflow-hidden text-ellipsis whitespace-nowrap dark:text-jacarta-200"
               data-tippy-content="Copy"
             >
-              <span>0x7a86c0b064171007716bbd6af96676935799a63e</span>
+              <span>{address}</span>
             </button>
           </div>
 
@@ -140,7 +142,7 @@ export default function Profile() {
                 className="dropdown-menu dropdown-menu-end z-10 hidden min-w-[200px] whitespace-nowrap rounded-xl bg-white py-4 px-2 text-left shadow-xl dark:bg-jacarta-800"
                 aria-labelledby="collectionShare"
               >
-                <Socials />
+                {/* <Socials /> */}
               </div>
             </div>
             <div className="dropdown rounded-xl border border-jacarta-100 bg-white hover:bg-jacarta-100 dark:border-jacarta-600 dark:bg-jacarta-700 dark:hover:bg-jacarta-600">

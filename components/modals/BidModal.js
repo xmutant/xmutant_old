@@ -1,13 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
-export default function BidModal() {
+export default function BidModal({ onClose }) {
   return (
     <div>
       <div
-        className="modal fade"
+        className="modal fade show"
         id="placeBidModal"
-        tabIndex="-1"
-        aria-labelledby="placeBidLabel"
-        aria-hidden="true"
+        // tabIndex="-1"
+        // aria-labelledby="placeBidLabel"
+        // aria-hidden="true"
       >
         <div className="modal-dialog max-w-2xl">
           <div className="modal-content">

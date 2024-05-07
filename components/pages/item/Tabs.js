@@ -4,7 +4,7 @@ import Details from "./DetailsTab";
 import Activity from "./Activity";
 import History from "./History";
 
-export default function Tabs() {
+export default function Tabs({ tokenData }) {
   return (
     <div className="scrollbar-custom mt-14 overflow-x-auto rounded-lg">
       <div className="min-w-fit">
@@ -130,7 +130,7 @@ export default function Tabs() {
             role="tabpanel"
             aria-labelledby="offers-tab"
           >
-            <Offers />
+            {tokenData ? <Offers tokenData={tokenData} /> : null}
           </div>
 
           {/* Properties */}
@@ -150,7 +150,7 @@ export default function Tabs() {
             role="tabpanel"
             aria-labelledby="details-tab"
           >
-            <Details />
+            <Details tokenData={tokenData} />
           </div>
 
           {/* Activity */}

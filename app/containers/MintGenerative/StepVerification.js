@@ -1,0 +1,137 @@
+import style from "./StepCheckFiles.module.scss";
+import styleSteps from "./Steps.module.scss";
+import cs from "classnames";
+// import { StepComponent } from "../../types/Steps";
+import { ArtworkIframe } from "../../components/Artwork/PreviewIframe";
+import { ipfsUrlWithHash, ipfsUrlWithHashAndParams } from "../../utils/ipfs";
+import { ArtworkPreview } from "../../components/Artwork/Preview";
+import { Spacing } from "../../components/Layout/Spacing";
+import Link from "next/link";
+import { Button } from "../../components/Button";
+import { ArtworkFrame } from "../../components/Artwork/ArtworkFrame";
+import { ipfsGatewayUrl } from "../../services/Ipfs";
+import { fxParamsAsQueryParams } from "../../components/FxParams/utils";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import DisplayImageFromURL from "../../components/Image/DisplayImageFromURL";
+
+export const StepVerification = ({ onNext, state }) => {
+  const [first, setfirst] = useState(false);
+  const [url, setURL] = useState("");
+  useEffect(() => {
+    if (state.cidPreview) {
+      let tempURL = ipfsGatewayUrl(state.cidPreview);
+      console.log(tempURL);
+      setURL(tempURL);
+      setfirst(true);
+    }
+    console.log("verification state", state);
+  }, []);
+  return (
+    <>
+      <p>The preview image should match the Generative Artwork</p>
+
+      <Spacing size="3x-large" sm="regular" />
+
+      <div className={cs(style.container)}>
+        <div className={cs(style.artwork, styleSteps["artwork-link-cont"])}>
+          <h5>Generative Artwork</h5>
+          <Spacing size="regular" />
+          <div className={cs(style["preview-cont"])}>
+            <div className={cs(style["preview-wrapper"])}>
+              <ArtworkFrame>
+                <ArtworkIframe
+                  url={ipfsUrlWithHashAndParams(state.cidUrlParams, {
+                    xmhash: state.previewHash,
+                    xmiteration: state.previewIteration,
+                    xmminter: state.previewMinter,
+                    xmparams: state.previewInputBytes,
+                    xmParamsAsQueryParams: fxParamsAsQueryParams(
+                      state.snippetVersion
+                    ),
+                  })}
+                  textWaiting="looking for content on IPFS"
+                />
+              </ArtworkFrame>
+            </div>
+          </div>
+          <Spacing size="small" />
+          <Link
+            href={ipfsUrlWithHashAndParams(state.cidUrlParams, {
+              xmhash: state.previewHash,
+              xmiteration: state.previewIteration,
+              xmminter: state.previewMinter,
+              xmparams: state.previewInputBytes,
+              xmParamsAsQueryParams: fxParamsAsQueryParams(
+                state.snippetVersion
+              ),
+            })}
+            passHref
+          >
+            <Button
+              isLink
+              target="_blank"
+              size="small"
+              iconComp={<i aria-hidden className="fas fa-external-link-alt" />}
+              iconSide="right"
+              className={cs(styleSteps.center, style.button)}
+            >
+              open in new tab
+            </Button>
+          </Link>
+        </div>
+
+        <div className={cs(style.artwork, styleSteps["artwork-link-cont"])}>
+          <h5>Preview image</h5>
+          <Spacing size="regular" />
+          <div className={cs(style["preview-cont"])}>
+            <div className={cs(style["preview-wrapper"])}>
+              {url ? <ArtworkPreview url={url} loading={true} /> : null}
+              {/* <img
+                src={
+                  "https://gateway.fxhash2.xyz/ipfs/QmWDuPUvS5YfwN3yiLExJwoyouoP8BTmUW62SLdHoAoNmq"
+                }
+                alt="preview image"
+              />
+              <DisplayImageFromURL
+                imageUrl={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY_SAFE}/ipfs/${state.cidPreview}`}
+              /> */}
+            </div>
+          </div>
+          <Spacing size="small" />
+          <Link href={ipfsGatewayUrl(state.cidPreview)} passHref>
+            <Button
+              isLink
+              target="_blank"
+              size="small"
+              iconComp={<i aria-hidden className="fas fa-external-link-alt" />}
+              iconSide="right"
+              className={cs(styleSteps.center, style.button)}
+            >
+              open in new tab
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      <Spacing size="6x-large" sm="x-large" />
+
+      <section className={cs(styleSteps.bottom)}>
+        <Button
+          color="secondary"
+          iconComp={<i aria-hidden className="fas fa-arrow-right" />}
+          iconSide="right"
+          size="large"
+          onClick={() => onNext({})}
+          className={style.button}
+        >
+          next step
+        </Button>
+      </section>
+
+      <Spacing size="3x-large" />
+      <Spacing size="3x-large" sm="none" />
+      <Spacing size="3x-large" sm="none" />
+    </>
+  );
+};

@@ -9,7 +9,39 @@ import Activity from "./Activity";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function Collcetions() {
+export default function Collcetions({ item }) {
+  console.log(item);
+  const [collections, setCollections] = useState([]);
+
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      const collectionPromises = item.map(async (collection) => {
+        const tokenMetadata = await Promise.all(
+          collection.tokens.map(async (token) => {
+            const response = await fetch(token.metadataURI);
+            const data = await response.json();
+            return data.image;
+          })
+        );
+
+        return {
+          id: collection.address,
+          name: collection.name,
+          symbol: collection.symbol,
+          contractUri: collection.contractUri,
+          avatar: collection.contractUri, // Replace with actual avatar image URL
+          ownerName: "John Doe", // Replace with actual owner name
+          itemCount: collection.tokens.length,
+          images: tokenMetadata,
+        };
+      });
+
+      const collectionData = await Promise.all(collectionPromises);
+      setCollections(collectionData);
+    };
+
+    fetchMetadata();
+  }, [item]);
   const [allItems, setAllItems] = useState(useritems);
   useEffect(() => {
     tippy("[data-tippy-content]");
@@ -693,7 +725,7 @@ export default function Collcetions() {
             aria-labelledby="collections-tab"
           >
             <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-              {collections3.slice(0, 4).map((elm, i) => (
+              {collections.slice(0, 4).map((elm, i) => (
                 <article key={i}>
                   <div className="rounded-2.5xl border border-jacarta-100 bg-white p-[1.1875rem] transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
                     <Link

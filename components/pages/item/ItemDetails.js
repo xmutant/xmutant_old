@@ -1,11 +1,51 @@
+"use client";
 import Tabs from "./Tabs";
 import { allItems } from "@/data/item";
 import Image from "next/image";
 import Link from "next/link";
 import Timer from "./Timer";
+import { useState, useEffect } from "react";
+import NewBidModel from "@/components/modals/NewBidModel";
+import { useAccount } from "wagmi";
 
-export default function ItemDetails({ id }) {
+export default function ItemDetails({ tokenData, id }) {
   const item = allItems.filter((elm) => elm.id == id)[0] || allItems[0];
+  const { tokenId, metadataURI, owner, activityLog } = tokenData;
+  const { address } = useAccount();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [metadata, setMetadata] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [showBidModal, setShowBidModal] = useState(false);
+
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(metadataURI, {
+          method: "GET",
+        });
+        const data = await response.json();
+        setMetadata(data);
+        setImageUrl(data.image);
+      } catch (error) {
+        console.error("Error fetching metadata:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (metadataURI) {
+      fetchMetadata();
+    }
+  }, [metadataURI]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  const toggleBidModal = () => {
+    setShowBidModal(!showBidModal);
+  };
   return (
     <>
       <section className="relative pt-12 pb-24 lg:py-24">
@@ -13,7 +53,7 @@ export default function ItemDetails({ id }) {
           <Image
             width={1920}
             height={789}
-            src="/img/gradient_light.jpg"
+            src={imageUrl}
             alt="gradient"
             className="h-full w-full"
           />
@@ -26,7 +66,7 @@ export default function ItemDetails({ id }) {
               <Image
                 width={540}
                 height={670}
-                src={"/img/products/item_single_large.jpg"}
+                src={imageUrl}
                 alt="item"
                 className="cursor-pointer rounded-2.5xl w-[100%]"
                 data-bs-toggle="modal"
@@ -80,7 +120,7 @@ export default function ItemDetails({ id }) {
                     href={`/collections`}
                     className="mr-2 text-sm font-bold text-accent"
                   >
-                    {"CryptoGuysNFT"}
+                    {tokenData.address}
                   </Link>
                   <span
                     className="inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-green dark:border-jacarta-600"
@@ -101,67 +141,65 @@ export default function ItemDetails({ id }) {
               </div>
 
               <h1 className="mb-4 font-display text-4xl font-semibold text-jacarta-700 dark:text-white">
-                {item.title ? item.title : "CryptoGuysNFT"}
+                {metadata.name ? metadata.name : "Loading...."}
               </h1>
-
-              <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <span className="-ml-1" data-tippy-content="ETH">
-                    <svg
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      x="0"
-                      y="0"
-                      viewBox="0 0 1920 1920"
-                      // xml:space="preserve"
-                      className="mr-1 h-4 w-4"
-                    >
-                      <path
-                        fill="#8A92B2"
-                        d="M959.8 80.7L420.1 976.3 959.8 731z"
-                      ></path>
-                      <path
-                        fill="#62688F"
-                        d="M959.8 731L420.1 976.3l539.7 319.1zm539.8 245.3L959.8 80.7V731z"
-                      ></path>
-                      <path
-                        fill="#454A75"
-                        d="M959.8 1295.4l539.8-319.1L959.8 731z"
-                      ></path>
-                      <path
-                        fill="#8A92B2"
-                        d="M420.1 1078.7l539.7 760.6v-441.7z"
-                      ></path>
-                      <path
-                        fill="#62688F"
-                        d="M959.8 1397.6v441.7l540.1-760.6z"
-                      ></path>
-                    </svg>
+              {tokenData.isListed === true ? (
+                <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <span className="-ml-1" data-tippy-content="ETH">
+                      <svg
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        x="0"
+                        y="0"
+                        viewBox="0 0 1920 1920"
+                        // xml:space="preserve"
+                        className="mr-1 h-4 w-4"
+                      >
+                        <path
+                          fill="#8A92B2"
+                          d="M959.8 80.7L420.1 976.3 959.8 731z"
+                        ></path>
+                        <path
+                          fill="#62688F"
+                          d="M959.8 731L420.1 976.3l539.7 319.1zm539.8 245.3L959.8 80.7V731z"
+                        ></path>
+                        <path
+                          fill="#454A75"
+                          d="M959.8 1295.4l539.8-319.1L959.8 731z"
+                        ></path>
+                        <path
+                          fill="#8A92B2"
+                          d="M420.1 1078.7l539.7 760.6v-441.7z"
+                        ></path>
+                        <path
+                          fill="#62688F"
+                          d="M959.8 1397.6v441.7l540.1-760.6z"
+                        ></path>
+                      </svg>
+                    </span>
+                    <span className="text-sm font-medium tracking-tight text-green">
+                      {tokenData.highestBid} BTT
+                    </span>
+                  </div>
+                  <span className="text-sm text-jacarta-400 dark:text-jacarta-300">
+                    Highest bid
                   </span>
-                  <span className="text-sm font-medium tracking-tight text-green">
-                    4.7 ETH
+                  <span className="text-sm text-jacarta-400 dark:text-jacarta-300">
+                    1/1 available
                   </span>
                 </div>
-                <span className="text-sm text-jacarta-400 dark:text-jacarta-300">
-                  Highest bid
-                </span>
-                <span className="text-sm text-jacarta-400 dark:text-jacarta-300">
-                  1/1 available
-                </span>
-              </div>
+              ) : null}
 
               <p className="mb-10 dark:text-jacarta-300">
-                Neque aut veniam consectetur magnam libero, natus eius numquam
-                reprehenderit hic at, excepturi repudiandae magni optio odio
-                doloribus? Facilisi lobortisal morbi fringilla urna amet sed
-                ipsum.
+                {metadata.description}
               </p>
 
               {/* Creator / Owner */}
               <div className="mb-8 flex flex-wrap">
                 <div className="mr-8 mb-4 flex">
                   <figure className="mr-4 shrink-0">
-                    <Link href={`/user/1`} className="relative block">
+                    {/* <Link href={`/user/1`} className="relative block">
                       <Image
                         width={48}
                         height={48}
@@ -185,15 +223,15 @@ export default function ItemDetails({ id }) {
                           <path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
                         </svg>
                       </div>
-                    </Link>
+                    </Link> */}
                   </figure>
                   <div className="flex flex-col justify-center">
                     <span className="block text-sm text-jacarta-400 dark:text-white">
                       Creator <strong>10% royalties</strong>
                     </span>
-                    <Link href={`/user/2`} className="block text-accent">
+                    {/* <Link href={`/user/2`} className="block text-accent">
                       <span className="text-sm font-bold">@creative_world</span>
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
 
@@ -230,113 +268,152 @@ export default function ItemDetails({ id }) {
                       Owned by
                     </span>
                     <Link href={`/user/6`} className="block text-accent">
-                      <span className="text-sm font-bold">@051_Hart</span>
+                      <span className="text-sm font-bold">
+                        {tokenData.owner}
+                      </span>
                     </Link>
                   </div>
                 </div>
               </div>
 
-              {/* Bid */}
-              <div className="rounded-2lg border border-jacarta-100 bg-white p-8 dark:border-jacarta-600 dark:bg-jacarta-700">
-                <div className="mb-8 sm:flex sm:flex-wrap">
-                  {/* Highest bid */}
-                  <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
-                    <div className="block overflow-hidden text-ellipsis whitespace-nowrap">
-                      <span className="text-sm text-jacarta-400 dark:text-jacarta-300">
-                        Highest bid by{" "}
-                      </span>
-                      <Link
-                        href={`/user/9`}
-                        className="text-sm font-bold text-accent"
-                      >
-                        0x695d2ef170ce69e794707eeef9497af2de25df82
-                      </Link>
-                    </div>
-                    <div className="mt-3 flex">
-                      <figure className="mr-4 shrink-0">
-                        <Link href={`/user/8`} className="relative block">
-                          <Image
-                            width={48}
-                            height={48}
-                            src="/img/avatars/avatar_4.jpg"
-                            alt="avatar"
-                            className="rounded-2lg"
-                            loading="lazy"
-                          />
-                        </Link>
-                      </figure>
-                      <div>
-                        <div className="flex items-center whitespace-nowrap">
-                          <span className="-ml-1" data-tippy-content="ETH">
-                            <svg
-                              version="1.1"
-                              xmlns="http://www.w3.org/2000/svg"
-                              x="0"
-                              y="0"
-                              viewBox="0 0 1920 1920"
-                              // xml:space="preserve"
-                              className="h-5 w-5"
-                            >
-                              <path
-                                fill="#8A92B2"
-                                d="M959.8 80.7L420.1 976.3 959.8 731z"
-                              ></path>
-                              <path
-                                fill="#62688F"
-                                d="M959.8 731L420.1 976.3l539.7 319.1zm539.8 245.3L959.8 80.7V731z"
-                              ></path>
-                              <path
-                                fill="#454A75"
-                                d="M959.8 1295.4l539.8-319.1L959.8 731z"
-                              ></path>
-                              <path
-                                fill="#8A92B2"
-                                d="M420.1 1078.7l539.7 760.6v-441.7z"
-                              ></path>
-                              <path
-                                fill="#62688F"
-                                d="M959.8 1397.6v441.7l540.1-760.6z"
-                              ></path>
-                            </svg>
-                          </span>
-                          <span className="text-lg font-medium leading-tight tracking-tight text-green">
-                            4.7 ETH
-                          </span>
-                        </div>
+              {tokenData.isListed === true ? (
+                <div className="rounded-2lg border border-jacarta-100 bg-white p-8 dark:border-jacarta-600 dark:bg-jacarta-700">
+                  <div className="mb-8 sm:flex sm:flex-wrap">
+                    {/* Highest bid */}
+                    <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
+                      <div className="block overflow-hidden text-ellipsis whitespace-nowrap">
                         <span className="text-sm text-jacarta-400 dark:text-jacarta-300">
-                          ~10,864.10
+                          Highest bid by{" "}
                         </span>
+                        <Link
+                          href={`/user/9`}
+                          className="text-sm font-bold text-accent"
+                        >
+                          {tokenData.highestBidder}
+                        </Link>
+                      </div>
+                      <div className="mt-3 flex">
+                        <figure className="mr-4 shrink-0">
+                          {/* <Link href={`/user/8`} className="relative block">
+                            <Image
+                              width={48}
+                              height={48}
+                              src="/img/avatars/avatar_4.jpg"
+                              alt="avatar"
+                              className="rounded-2lg"
+                              loading="lazy"
+                            />
+                          </Link> */}
+                        </figure>
+                        <div>
+                          <div className="flex items-center whitespace-nowrap">
+                            <span className="-ml-1" data-tippy-content="ETH">
+                              <svg
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                x="0"
+                                y="0"
+                                viewBox="0 0 1920 1920"
+                                // xml:space="preserve"
+                                className="h-5 w-5"
+                              >
+                                <path
+                                  fill="#8A92B2"
+                                  d="M959.8 80.7L420.1 976.3 959.8 731z"
+                                ></path>
+                                <path
+                                  fill="#62688F"
+                                  d="M959.8 731L420.1 976.3l539.7 319.1zm539.8 245.3L959.8 80.7V731z"
+                                ></path>
+                                <path
+                                  fill="#454A75"
+                                  d="M959.8 1295.4l539.8-319.1L959.8 731z"
+                                ></path>
+                                <path
+                                  fill="#8A92B2"
+                                  d="M420.1 1078.7l539.7 760.6v-441.7z"
+                                ></path>
+                                <path
+                                  fill="#62688F"
+                                  d="M959.8 1397.6v441.7l540.1-760.6z"
+                                ></path>
+                              </svg>
+                            </span>
+                            <span className="text-lg font-medium leading-tight tracking-tight text-green">
+                              {tokenData.highestBid} BTT
+                            </span>
+                          </div>
+                          {/* <span className="text-sm text-jacarta-400 dark:text-jacarta-300">
+                            ~10,864.10
+                          </span> */}
+                        </div>
                       </div>
                     </div>
+
+                    {/* Countdown */}
+                    {/* <div className="mt-4 dark:border-jacarta-600 sm:mt-0 sm:w-1/2 sm:border-l sm:border-jacarta-100 sm:pl-4 lg:pl-8">
+                      <span className="js-countdown-ends-label text-sm text-jacarta-400 dark:text-jacarta-300">
+                        Auction ends in
+                      </span>
+                      <Timer />
+                    </div> */}
                   </div>
 
-                  {/* Countdown */}
-                  <div className="mt-4 dark:border-jacarta-600 sm:mt-0 sm:w-1/2 sm:border-l sm:border-jacarta-100 sm:pl-4 lg:pl-8">
-                    <span className="js-countdown-ends-label text-sm text-jacarta-400 dark:text-jacarta-300">
-                      Auction ends in
-                    </span>
-                    <Timer />
-                  </div>
+                  {/* <a
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#placeBidModal"
+                    className="inline-block w-full rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark"
+                  >
+                    Place Bid
+                  </a> */}
+                  <button
+                    // href="#"
+                    // data-bs-toggle="modal"
+                    // data-bs-target="#placeBidModal"
+                    onClick={toggleBidModal}
+                    className="inline-block w-full rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark"
+                  >
+                    Place Bid
+                  </button>
                 </div>
+              ) : (
+                <>
+                  {tokenData.isListed === false &&
+                  tokenData.owner === address ? (
+                    <>
+                      <div>
+                        <button
+                          // href="#"
+                          // data-bs-toggle="modal"
+                          // data-bs-target="#placeBidModal"
+                          onClick={toggleBidModal}
+                          className="inline-block w-full rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark"
+                        >
+                          List This NFT
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <div>
+                      <h1>NFT IS NOT LISTED</h1>
+                    </div>
+                  )}
+                </>
+              )}
 
-                <a
-                  href="#"
-                  data-bs-toggle="modal"
-                  data-bs-target="#placeBidModal"
-                  className="inline-block w-full rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark"
-                >
-                  Place Bid
-                </a>
-              </div>
               {/* end bid */}
             </div>
             {/* end details */}
           </div>
 
           {/* Tabs */}
-          <Tabs />
+          <Tabs tokenData={tokenData} />
           {/* end tabs */}
         </div>
+        {showBidModal ? (
+          <NewBidModel onClose={toggleBidModal} tokenData={tokenData} />
+        ) : null}
       </section>
     </>
   );
