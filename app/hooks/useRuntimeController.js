@@ -7,7 +7,7 @@ import {
   useRef,
   RefObject,
 } from "react";
-import { generateFxHash } from "../utils/hash";
+import { generateXmHash } from "../utils/hash";
 
 import {
   IRuntimeContext,
@@ -121,7 +121,7 @@ export const useRuntimeController = (ref, project, opts) => {
   // the runtime state -> controls the state connected to the iframe
   const runtime = useRuntime({
     state: {
-      hash: project.hash || generateFxHash(),
+      hash: project.hash || generateXmHash(),
       minter: project.minter || "",
       iteration: project.iteration || 1,
       context: project.context,
@@ -210,12 +210,12 @@ export const useRuntimeController = (ref, project, opts) => {
     });
   }, [runtime.details.definitionHash.params]);
 
-  // const updateQueryParams = ({ fxhash, fxparams }) =>
+  // const updateQueryParams = ({ xmhash, fxparams }) =>
   //   router.replace(
   //     {
   //       query: {
   //         ...router.query,
-  //         fxhash,
+  //         xmhash,
   //       },
   //       hash: `0x${fxparams}`,
   //     },
@@ -226,7 +226,7 @@ export const useRuntimeController = (ref, project, opts) => {
   // whenever the runtime state changes, update the query params
   // useEffect(() => {
   //   updateQueryParams({
-  //     fxhash: runtime.state.hash,
+  //     xmhash: runtime.state.hash,
   //     fxparams: runtime.details.params.inputBytes || project.inputBytes || "",
   //   })
   // }, [runtime.state.hash, runtime.details.params.inputBytes])

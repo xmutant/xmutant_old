@@ -1,11 +1,10 @@
-import style from "./HashTest.module.scss"
-import cs from "classnames"
-import { InputText } from "../Input/InputText"
-import { Button } from "../Button"
-import { useEffect, useState, useRef } from "react"
-import { generateFxHash, isHashValid } from "../../utils/hash"
-import { Field } from "../Form/Field"
-
+import style from "./HashTest.module.scss";
+import cs from "classnames";
+import { InputText } from "../Input/InputText";
+import { Button } from "../Button";
+import { useEffect, useState, useRef } from "react";
+import { generateXmHash, isHashValid } from "../../utils/hash";
+import { Field } from "../Form/Field";
 
 export function HashTest({
   onHashUpdate,
@@ -13,29 +12,29 @@ export function HashTest({
   value,
   autoGenerate = true,
 }) {
-  const [error, setError] = useState()
-  const hashInputRef = useRef(null)
+  const [error, setError] = useState();
+  const hashInputRef = useRef(null);
 
   // when it mounts, generates a hash and send it upwards
   useEffect(() => {
     if (autoGenerate) {
-      onHashUpdate(generateFxHash())
+      onHashUpdate(generateXmHash());
     }
-  }, [autoGenerate, onHashUpdate])
+  }, [autoGenerate, onHashUpdate]);
 
   const newHash = () => {
-    setError(undefined)
-    onHashUpdate(generateFxHash())
-  }
+    setError(undefined);
+    onHashUpdate(generateXmHash());
+  };
 
   const manualHashUpdate = (hash) => {
     if (isHashValid(hash)) {
-      setError(undefined)
-      onHashUpdate(hash)
+      setError(undefined);
+      onHashUpdate(hash);
     } else {
-      setError("You can only paste a valid hash")
+      setError("You can only paste a valid hash");
     }
-  }
+  };
 
   return (
     <div className={cs(style.container)}>
@@ -58,5 +57,5 @@ export function HashTest({
         </Button>
       </div>
     </div>
-  )
+  );
 }

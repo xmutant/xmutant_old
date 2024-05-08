@@ -1,54 +1,47 @@
-import React, { memo, useCallback, useMemo, useState } from "react"
-import cs from "classnames"
-import style from "./GenerativeDisplayIteration.module.scss"
-import colors from "styles/Colors.module.css"
-import layout from "../../../styles/Layout.module.scss"
-import { Spacing } from "../../../components/Layout/Spacing"
-import { EntityBadge } from "../../../components/User/EntityBadge"
-import { UserBadge } from "../../../components/User/UserBadge"
-import { ListingAccept } from "../../Objkt/ListingAccept"
-import { ClientOnlyEmpty } from "../../../components/Utils/ClientOnly"
-import { UserGuard } from "../../../components/Guards/UserGuard"
-import { MarketplaceActions } from "../../Objkt/MarketplaceActions"
-import Link from "next/link"
+import React, { memo, useCallback, useMemo, useState } from "react";
+import cs from "classnames";
+import style from "./GenerativeDisplayIteration.module.scss";
+import colors from "styles/Colors.module.css";
+import layout from "../../../styles/Layout.module.scss";
+import { Spacing } from "../../../components/Layout/Spacing";
+import { EntityBadge } from "../../../components/User/EntityBadge";
+import { UserBadge } from "../../../components/User/UserBadge";
+import { ListingAccept } from "../../Objkt/ListingAccept";
+import { ClientOnlyEmpty } from "../../../components/Utils/ClientOnly";
+import { UserGuard } from "../../../components/Guards/UserGuard";
+import { MarketplaceActions } from "../../Objkt/MarketplaceActions";
+import Link from "next/link";
 import {
   getGenerativeTokenMarketplaceUrl,
   getGenerativeTokenUrl,
-} from "../../../utils/generative-token"
-import { Button } from "../../../components/Button"
-import text from "../../../styles/Text.module.css"
-import { format } from "date-fns"
-import { Labels } from "../../../components/GenerativeToken/Label/Labels"
-import nl2br from "react-nl2br"
-import { displayPercentage, displayRoyalties } from "../../../utils/units"
-import { ListSplits } from "../../../components/List/ListSplits"
-import { ipfsGatewayUrl } from "../../../services/Ipfs"
-import { gentkLiveUrl } from "../../../utils/objkt"
-import { Features } from "../../../components/Features/Features"
-import { User } from "../../../types/entities/User"
-import { Objkt } from "../../../types/entities/Objkt"
-import { GenerativeArtwork } from "../../../components/GenerativeToken/GenerativeArtwork"
-import { Clamp } from "../../../components/Clamp/Clamp"
-import { truncateMiddle } from "../../../utils/strings"
-import { HoverTitle } from "../../../components/Utils/HoverTitle"
-import { Icon } from "../../../components/Icons/Icon"
-import { GenerativeRedeemable } from "../../../components/GenerativeToken/GenerativeRedeemable"
-import { DisplayTezos } from "../../../components/Display/DisplayTezos"
-import { RedeemableDetails } from "types/entities/Redeemable"
-import { RedeemableIndicator } from "components/Card/RedeemableIndicator"
+} from "../../../utils/generative-token";
+import { Button } from "../../../components/Button";
+import text from "../../../styles/Text.module.css";
+import { format } from "date-fns";
+import { Labels } from "../../../components/GenerativeToken/Label/Labels";
+import nl2br from "react-nl2br";
+import { displayPercentage, displayRoyalties } from "../../../utils/units";
+import { ListSplits } from "../../../components/List/ListSplits";
+import { ipfsGatewayUrl } from "../../../services/Ipfs";
+import { gentkLiveUrl } from "../../../utils/objkt";
+import { Features } from "../../../components/Features/Features";
+import { User } from "../../../types/entities/User";
+import { Objkt } from "../../../types/entities/Objkt";
+import { GenerativeArtwork } from "../../../components/GenerativeToken/GenerativeArtwork";
+import { Clamp } from "../../../components/Clamp/Clamp";
+import { truncateMiddle } from "../../../utils/strings";
+import { HoverTitle } from "../../../components/Utils/HoverTitle";
+import { Icon } from "../../../components/Icons/Icon";
+import { GenerativeRedeemable } from "../../../components/GenerativeToken/GenerativeRedeemable";
+import { DisplayTezos } from "../../../components/Display/DisplayTezos";
+import { RedeemableDetails } from "types/entities/Redeemable";
+import { RedeemableIndicator } from "components/Card/RedeemableIndicator";
 
-
-
-const _GenerativeDisplayIteration = ({
-  objkt,
-  redeemableDetails,
-}) => {
-  const [showDescription, setShowDescription] = useState(false)
-  const handleShowDescription = useCallback(() => setShowDescription(true), [])
-  const owner = (
-    objkt.activeListing ? objkt.activeListing.issuer : objkt.owner
-  )
-  const creator = objkt.issuer.author
+const _GenerativeDisplayIteration = ({ objkt, redeemableDetails }) => {
+  const [showDescription, setShowDescription] = useState(false);
+  const handleShowDescription = useCallback(() => setShowDescription(true), []);
+  const owner = objkt.activeListing ? objkt.activeListing.issuer : objkt.owner;
+  const creator = objkt.issuer.author;
   const tokenFromObjtk = useMemo(() => {
     return {
       id: objkt.issuer.id,
@@ -62,16 +55,16 @@ const _GenerativeDisplayIteration = ({
       inputBytesSize: objkt.issuer?.inputBytesSize || 0,
       supply: objkt.issuer?.supply || 0,
       iterationsCount: objkt.issuer?.iterationsCount || 0,
-    }
-  }, [objkt])
-  const gentkUrl = useMemo(() => gentkLiveUrl(objkt), [objkt])
-  const isParamsToken = !!objkt.inputBytes
+    };
+  }, [objkt]);
+  const gentkUrl = useMemo(() => gentkLiveUrl(objkt), [objkt]);
+  const isParamsToken = !!objkt.inputBytes;
   const exploreParamsQuery = useMemo(() => {
-    if (!isParamsToken) return null
-    return `fxhash=${objkt.generationHash}#0x${objkt.inputBytes}`
-  }, [objkt, isParamsToken])
-  const minter = objkt.minter
-  const isProjectRedeemable = objkt.issuer.redeemables?.length > 0
+    if (!isParamsToken) return null;
+    return `xmhash=${objkt.generationHash}#0x${objkt.inputBytes}`;
+  }, [objkt, isParamsToken]);
+  const minter = objkt.minter;
+  const isProjectRedeemable = objkt.issuer.redeemables?.length > 0;
 
   return (
     <>
@@ -341,7 +334,7 @@ const _GenerativeDisplayIteration = ({
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export const GenerativeDisplayIteration = memo(_GenerativeDisplayIteration)
+export const GenerativeDisplayIteration = memo(_GenerativeDisplayIteration);

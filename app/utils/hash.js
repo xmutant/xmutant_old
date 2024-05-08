@@ -1,6 +1,6 @@
 const charSet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
 
-export const generateFxHash = () =>
+export const generateXmHash = () =>
   "xm" +
   Array(49)
     .fill(0)

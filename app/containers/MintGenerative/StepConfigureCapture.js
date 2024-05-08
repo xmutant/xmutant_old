@@ -191,14 +191,14 @@ export const StepConfigureCapture = ({ onNext, state }) => {
 
   return (
     <>
+      <Spacing size="x-large" sm="none" />
       <p>
         When collectors will{" "}
-        <strong>mint a token from your Generative Token</strong>, fxhash will
+        <strong>mint a token from your Generative Token</strong>, xmutant will
         generate a preview image to go with their Token. <br />
-        You need to configure how this preview will be taken by fxhash capture
+        You need to configure how this preview will be taken by xmutant capture
         module.
         <br />
-        Read more about the different{" "}
       </p>
 
       <Spacing size="5x-large" sm="none" />

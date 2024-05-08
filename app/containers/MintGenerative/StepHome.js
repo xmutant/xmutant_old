@@ -13,24 +13,16 @@ export const StepHome = ({ onNext }) => {
   return (
     <>
       <p className={cs(style.presentation)}>
-        <span>
-          Before minting a generative token on the blockchain, please read our{" "}
-        </span>
-        {/* <LinkGuide href="/doc/artist/guide-publish-generative-token">
-          Guide to build a Generative Token
-        </LinkGuide> */}
-        <span> and test your zip file in the </span>
-        <Link href="/sandbox">sandbox
-          {/* <a>sandbox</a> */}
-        </Link>
+        <span>Before minting a generative token on the blockchain, please</span>
+
+        <span> test your zip file in the </span>
+        <Link href="/sandbox">sandbox</Link>
         <span>.</span>
       </p>
 
       <p className={cs(style.presentation)}>
-        Please also take a look at fxhash{" "}
         {/* <LinkGuide href="/doc/artist/code-of-conduct">Code of Conduct</LinkGuide> */}
-        . If your token does not follow the code, it may get moderated by our
-        team
+        If your token does not follow the code, it may get moderated by our team
       </p>
 
       <Spacing size="3x-large" sm="none" />

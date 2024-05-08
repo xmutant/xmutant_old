@@ -1,4 +1,4 @@
-import { getMutezDecimalsNb } from "./Math";
+import { getMutezDecimalsNb } from "./math";
 
 /**
  * Given a number in mutez, outputs a more readable format such as
@@ -39,7 +39,7 @@ export function displayMutez(mutez, maxDecimals) {
   decimals = maxDecimals != null ? Math.min(maxDecimals, decimals) : decimals;
   const tez = mutez / 1000000;
   const dec = tez - Math.floor(tez);
-  return (dec * 10 ** decimals) | 0 > 0
+  return (dec * 10 ** decimals) | (0 > 0)
     ? tez.toFixed(decimals)
     : Math.floor(tez);
 }

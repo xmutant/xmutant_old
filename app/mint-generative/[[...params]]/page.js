@@ -13,11 +13,11 @@ const MintGenerative = () => {
   return (
     <>
       <Head>
-        <title>fxhash — mint Generative Token</title>
+        <title>xmutant — mint Generative Token</title>
         <meta
           key="og:title"
           property="og:title"
-          content="fxhash — mint Generative Token"
+          content="xmutant — mint Generative Token"
         />
         <meta
           key="description"

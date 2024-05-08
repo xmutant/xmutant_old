@@ -2,6 +2,8 @@
 import Image from "next/image";
 
 import Ipad from "../ipad/LandingComp";
+import img1 from "../../public/img/gradient.jpg";
+import img2 from "../../public/img/gradient_dark.jpg";
 
 export default function Hero() {
   return (
@@ -10,7 +12,7 @@ export default function Hero() {
         <Image
           width={1920}
           height={900}
-          src="/img/gradient.jpg"
+          src={img1}
           alt="gradient"
           className="w-full"
         />
@@ -19,7 +21,7 @@ export default function Hero() {
         <Image
           width={1920}
           height={900}
-          src="/img/gradient_dark.jpg"
+          src={img2}
           alt="gradient dark"
           className="w-full"
         />

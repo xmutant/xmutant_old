@@ -3,7 +3,7 @@
 import style from "./Sandbox.module.scss";
 import cs from "classnames";
 import { useState, useMemo, useRef, useEffect } from "react";
-import { generateFxHash } from "../../utils/hash";
+import { generateXmHash } from "../../utils/hash";
 import { Dropzone } from "../../components/Input/Dropzone";
 import { Button } from "../../components/Button";
 import { FileList } from "./FileList";
@@ -39,11 +39,11 @@ export default function Sandbox() {
       return {
         getUrl(state) {
           console.log("state", state);
-          const base = `/sandbox/preview.html?id=${sandboxId}`;
-          const hash = sandboxId === "0" ? generateFxHash() : state.hash || "";
+          const base = `/something/preview.html?id=${sandboxId}`;
+          const hash = sandboxId === "0" ? generateXmHash() : state.hash || "";
           const minter = state.minter || "";
           const params = state.inputBytes;
-          let url = `${base}&fxhash=${hash}&fxminter=${minter}`;
+          let url = `${base}&xmhash=${hash}&fxminter=${minter}`;
           if (params) {
             if (fxParamsAsQueryParams(state.snippetVersion)) {
               url += `&fxparams=${params}`;
@@ -105,7 +105,7 @@ export default function Sandbox() {
       processFile(file);
       // Hack: Forces a refresh of the iframe
       setTimeout(() => {
-        runtime.state.update({ hash: generateFxHash() });
+        runtime.state.update({ hash: generateXmHash() });
       }, 100);
     }
   };

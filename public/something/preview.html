@@ -7,10 +7,9 @@
       // register service worker
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
+          // const headers = { "Service-Worker-Allowed": "/" };
           navigator.serviceWorker
-            .register("./worker.js", {
-              scope: "/sandbox",
-            })
+            .register("/something/worker.js", { scope: "/something/" })
             .then((reg) => {
               // register event for service worker's response
               navigator.serviceWorker.addEventListener("message", (event) => {
@@ -36,5 +35,7 @@
         });
       }
     </script>
+
+    <h1>Test</h1>
   </body>
 </html>
