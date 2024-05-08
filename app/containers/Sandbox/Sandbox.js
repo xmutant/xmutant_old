@@ -39,7 +39,7 @@ export default function Sandbox() {
       return {
         getUrl(state) {
           console.log("state", state);
-          const base = `/sandbox/preview.html?id=${sandboxId}`;
+          const base = `/something/preview.html?id=${sandboxId}`;
           const hash = sandboxId === "0" ? generateXmHash() : state.hash || "";
           const minter = state.minter || "";
           const params = state.inputBytes;

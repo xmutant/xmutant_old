@@ -27,7 +27,9 @@ self.addEventListener("fetch", async (event) => {
         (async function () {
           // find the path of the resource requested
 
-          console.log(cache[id]);
+          console.log("cache[id]", cache[id]);
+          console.log("referrers[id]", referrers[id]);
+          console.log(event.request.url);
           const path = event.request.url.replace(referrers[id].root, "");
           // only fetch if there is a match in the cache
           console.log(path);
@@ -62,6 +64,7 @@ self.addEventListener("message", async (event) => {
   }
 
   if (event?.data?.type === "REGISTER_URLS") {
+    console.log("registering the urls");
     const data = event.data.data;
     cache[data.id] = data.record;
   }
