@@ -138,29 +138,6 @@ export const InputCaptureSettings = ({ settings, onChange }) => {
       )}
 
       <Spacing size="3x-large" />
-
-      <h5>Extra settings</h5>
-
-      <p>
-        <span>Only use if your project meets </span>
-        <Link href="/doc/artist/project-settings#environment">
-          certain criteria
-        </Link>
-      </p>
-
-      <Checkbox
-        value={settings.gpu || false}
-        onChange={(val) => update("gpu", val)}
-        paddingLeft={false}
-      >
-        GPU-enabled render instances
-      </Checkbox>
-
-      {settings.gpu && (
-        <em>
-          GPU instances can take up to 3 minutes to bootstrap, please be patient
-        </em>
-      )}
     </div>
   );
 };

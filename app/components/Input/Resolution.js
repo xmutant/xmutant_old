@@ -1,14 +1,10 @@
-import style from "./Resolution.module.scss"
-import cs from "classnames"
+import style from "./Resolution.module.scss";
+import cs from "classnames";
 
-import { InputText } from "./InputText"
-import { clamp } from "../../utils/math"
+import { InputText } from "./InputText";
+import { clamp } from "@/app/utils/math";
 
-
-
-const integerConstraint = (x) => Math.round(x)
-
-
+const integerConstraint = (x) => Math.round(x);
 
 export function InputResolution({
   value,
@@ -22,15 +18,15 @@ export function InputResolution({
     onChange({
       ...value,
       [component]: v,
-    })
-  }
+    });
+  };
 
   const applyConstraint = (component) => {
     onChange({
       ...value,
       [component]: constraint(clamp(value[component], min, max)),
-    })
-  }
+    });
+  };
 
   return (
     <div className={cs(style.container, className)}>
@@ -48,5 +44,5 @@ export function InputResolution({
         onBlur={() => applyConstraint("y")}
       />
     </div>
-  )
+  );
 }

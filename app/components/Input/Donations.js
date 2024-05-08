@@ -28,7 +28,7 @@ function Donations({ onClickDonation }) {
           onClose={() => setShowModal(false)}
         >
           <span className={cs(text.info)}>
-            These addresses are endorsed by fxhash as belonging to their
+            These addresses are endorsed by xmutant as belonging to their
             respective organisations.
           </span>
 

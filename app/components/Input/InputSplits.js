@@ -1,21 +1,21 @@
-import style from "./InputSplits.module.scss"
-import text from "../../styles/Text.module.css"
-import cs from "classnames"
+import style from "./InputSplits.module.scss";
+import text from "../../styles/Text.module.css";
+import cs from "classnames";
 
 // import { InputSearchUser } from "./InputSearchUser"
-import {  useMemo, useState } from "react"
-// import { isTezosAddress } from "../../utils/strings"
-import { Button } from "../Button"
+import { useMemo, useState } from "react";
+
+import { Button } from "../Button";
 // import { UserFromAddress } from "../User/UserFromAddress"
 // import { UserBadge } from "../User/UserBadge"
-import { InputText } from "./InputText"
+import { InputText } from "./InputText";
 import {
   transformSplitsEqual,
   TSplitsTransformer,
-} from "../../utils/transformers/splits"
-import { ButtonDelete } from "../Button/ButtonDelete"
-import { displayPercentage } from "../../utils/units"
-import { cloneDeep } from "@apollo/client/utilities"
+} from "../../utils/transformers/splits";
+import { ButtonDelete } from "../Button/ButtonDelete";
+import { displayPercentage } from "../../utils/units";
+import { cloneDeep } from "@apollo/client/utilities";
 
 /**
  * A component to define a list of splits (basically a list of (address, nat))
@@ -36,13 +36,13 @@ export function InputSplits({
   readOnly,
 }) {
   // the pkh of the input
-  const [pkh, setPkh] = useState("")
+  const [pkh, setPkh] = useState("");
 
   // compute the sum of the shares
   const sum = useMemo(() => {
-    const S = value.reduce((a, b) => a + parseInt(b.pct), 0)
-    return isNaN(S) ? false : S
-  }, [value])
+    const S = value.reduce((a, b) => a + parseInt(b.pct), 0);
+    return isNaN(S) ? false : S;
+  }, [value]);
 
   // updates the split and forces the shares to match, if defined
   const update = (splits) => {
@@ -51,8 +51,8 @@ export function InputSplits({
         address: split.address,
         pct: sharesTransformer(splits, idx),
       }))
-    )
-  }
+    );
+  };
 
   const addAddress = (address) => {
     update([
@@ -61,8 +61,8 @@ export function InputSplits({
         address: address,
         pct: defaultShares,
       },
-    ])
-  }
+    ]);
+  };
 
   const addAddresses = (addresses) => {
     update([
@@ -71,50 +71,50 @@ export function InputSplits({
         address,
         pct: defaultShares,
       })),
-    ])
-  }
+    ]);
+  };
 
   const addSplits = (splits) => {
-    const nsplits = cloneDeep(value)
+    const nsplits = cloneDeep(value);
     for (const split of splits) {
-      const F = nsplits.find((s) => s.address === split.address)
+      const F = nsplits.find((s) => s.address === split.address);
       if (F) {
-        F.pct += split.pct
+        F.pct += split.pct;
       } else {
-        nsplits.push(split)
+        nsplits.push(split);
       }
     }
-    onChange?.(nsplits)
-  }
+    onChange?.(nsplits);
+  };
 
   const add = (address) => {
-    address = address ?? pkh
+    address = address ?? pkh;
     if (!value.find((split) => split.address === address)) {
-      addAddress(address)
+      addAddress(address);
     }
-    setPkh("")
-  }
+    setPkh("");
+  };
 
   const remove = (address) => {
-    update(value.filter((split) => split.address !== address))
-  }
+    update(value.filter((split) => split.address !== address));
+  };
 
   const updateShare = (address, share) => {
-    const nsplits = [...value]
-    const target = nsplits.find((split) => split.address === address)
+    const nsplits = [...value];
+    const target = nsplits.find((split) => split.address === address);
     if (target) {
-      target.pct = share
-      onChange?.(nsplits)
+      target.pct = share;
+      onChange?.(nsplits);
     }
-  }
+  };
 
   // given the index of split, outputs the error related to the share if any
   const getShareError = (idx) => {
-    if (!errors || typeof errors === "string") return undefined
-    const err = errors[idx]
-    if (!err) return undefined
-    return err.pct || undefined
-  }
+    if (!errors || typeof errors === "string") return undefined;
+    const err = errors[idx];
+    if (!err) return undefined;
+    return err.pct || undefined;
+  };
 
   return (
     <>
@@ -131,7 +131,7 @@ export function InputSplits({
         </thead>
         <tbody>
           {value.map((split, idx) => {
-            const shareError = getShareError(idx)
+            const shareError = getShareError(idx);
             return (
               <tr key={split.address}>
                 <td className={cs(style.user_cell)}>
@@ -154,7 +154,7 @@ export function InputSplits({
                   <InputText
                     value={split.pct}
                     onChange={(evt) =>
-                      updateShare(split.address, evt.target.value )
+                      updateShare(split.address, evt.target.value)
                     }
                     type="text"
                     min={1}
@@ -170,10 +170,8 @@ export function InputSplits({
                   <td className={cs(style.percentage)}>
                     {sum === false
                       ? "/"
-                      : displayPercentage(
-                          parseInt(split.pct ) / sum,
-                          false
-                        ) + "%"}
+                      : displayPercentage(parseInt(split.pct) / sum, false) +
+                        "%"}
                   </td>
                 )}
                 {!readOnly && (
@@ -184,7 +182,7 @@ export function InputSplits({
                   </td>
                 )}
               </tr>
-            )
+            );
           })}
 
           {!readOnly && (
@@ -233,5 +231,5 @@ export function InputSplits({
         </tbody>
       </table>
     </>
-  )
+  );
 }
