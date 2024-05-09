@@ -13,11 +13,11 @@ export default function Hotbids() {
   const [allBids, setAllBids] = useState();
   const [fetchedBids, setFetchedBids] = useState([]);
 
-  const currentUrl = process.env.NECT_APP_URL;
+  const currentUrl = process.env.NEXT_PUBLIC_URL;
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${currentUrl}/api/get-home-bids`);
+        const response = await fetch(`/api/get-home-bids`);
         const data = await response.json();
         setFetchedBids(data);
       } catch (error) {

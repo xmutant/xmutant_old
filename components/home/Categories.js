@@ -28,7 +28,7 @@ export default function Categories() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch(`${currentUrl}/api/get-home-bids`);
+        const response = await fetch(`/api/get-home-bids`);
         const data = await response.json();
         setAllItems(data);
       } catch (error) {

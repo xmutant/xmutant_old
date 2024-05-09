@@ -102,7 +102,7 @@ export default function Create() {
   const fetchCollections = async () => {
     try {
       const response = await fetch(
-        `${currentUrl}/api/get-collections?address=${address}`,
+        `/api/get-collections?address=${address}`,
         requestOptions
       );
       const data = await response.json();

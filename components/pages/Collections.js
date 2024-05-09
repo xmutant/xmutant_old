@@ -30,7 +30,7 @@ export default function Collections() {
     const collections = []; // Initialize an empty array
 
     // Fetch data from the API and store it in the `collections` array
-    fetch(`${currentUrl}/api/get-all-collection`, {
+    fetch(`/api/get-all-collection`, {
       method: "GET",
       redirect: "follow",
     })

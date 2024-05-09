@@ -25,7 +25,7 @@ export default function UserPage() {
         };
 
         const response = await fetch(
-          `${currentUrl}/api/get-nfts?address=${address}`,
+          `/api/get-nfts?address=${address}`,
           requestOptions
         );
         const data = await response.json();

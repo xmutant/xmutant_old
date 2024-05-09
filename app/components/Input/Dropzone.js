@@ -51,8 +51,8 @@ function Dropzone({
       onDrop,
       onDragEnter: (event) => {},
       accept: accepted,
-      maxFiles: 10,
-      multiple: true,
+      maxFiles: 1,
+      multiple: false,
       maxSize: maxSizeMb * 1024 * 1024,
     });
 
@@ -84,19 +84,15 @@ function Dropzone({
         <div>
           {error ? (
             <>
-              {fileRejections?.length > 0 ? (
-                fileRejections.map(({ file, errors }) => (
-                  <div key={file.name} className={colors.error}>
-                    {file.name}:{" "}
-                    {errors
-                      .map((e) => getPrettyError(e.code))
-                      .join(",")}
-                    {"."}
-                  </div>
-                ))
-              ) : (
-                error
-              )}
+              {fileRejections?.length > 0
+                ? fileRejections.map(({ file, errors }) => (
+                    <div key={file.name} className={colors.error}>
+                      {file.name}:{" "}
+                      {errors.map((e) => getPrettyError(e.code)).join(",")}
+                      {"."}
+                    </div>
+                  ))
+                : error}
             </>
           ) : isDragActive ? (
             textDrag

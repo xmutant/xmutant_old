@@ -23,7 +23,7 @@ export default function ItemDetailsPage({ params }) {
         };
 
         const response = await fetch(
-          `${currentUrl}/api/get-nft-item?address=${contractAddress}&tokenid=${tokenId}`,
+          `/api/get-nft-item?address=${contractAddress}&tokenid=${tokenId}`,
           requestOptions
         );
         const data = await response.json();

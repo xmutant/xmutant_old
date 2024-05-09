@@ -5,7 +5,7 @@ export const collections = []; // Initialize an empty array
 const currentUrl = process.env.NEXT_PUBLIC_URL;
 
 // Fetch data from the API and store it in the `collections` array
-fetch(`${currentUrl}/api/get-all-collection`, {
+fetch(`/api/get-all-collection`, {
   method: "GET",
   redirect: "follow",
 })

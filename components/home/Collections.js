@@ -14,7 +14,7 @@ export default function Collections() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${currentUrl}/api/get-collection-home`);
+        const response = await fetch(`/api/get-collection-home`);
         const data = await response.json();
         console.log(data);
         setCollections(data);
