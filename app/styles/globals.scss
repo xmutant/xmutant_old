@@ -274,3 +274,12 @@ button {
   height: 100vh;
   overflow: hidden;
 }
+.animate-gradient{
+  ll-color: transparent;
+    background: linear-gradient(270deg, #ff7356, #ff59e2 25.52%, #52ddf6 50%, #eadf4e 76.04%, #ff7356);
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-size: 200% auto;
+
+  animation: gradient 6s linear infinite;
+}
