@@ -2,7 +2,7 @@
 import { useState } from "react";
 import lighthouse from "@lighthouse-web3/sdk";
 
-const useNewFileUpload = (apiKey) => {
+const useNewFileUpload = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -11,11 +11,13 @@ const useNewFileUpload = (apiKey) => {
   const uploadFiles = async (file) => {
     setIsUploading(true);
     setError(null);
-    const apiKey = "9b83daf8.ccdb11e9c2aa4f2a86f5f771436c7cd2";
 
     try {
       if (file) {
-        const output = await lighthouse.upload(file, apiKey);
+        const output = await lighthouse.upload(
+          file,
+          process.env.NEXT_PUBLIC_LIGHTHOUSE_KEY
+        );
         setUploadedFileUrls((prevUrls) => [
           ...prevUrls,
           "https://gateway.lighthouse.storage/ipfs/" + output.data.Hash,

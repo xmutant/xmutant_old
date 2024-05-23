@@ -10,25 +10,25 @@ export default function Footer() {
       <div className="container">
         <div className="grid grid-cols-6 gap-x-7 gap-y-14 pt-24 pb-12 md:grid-cols-12">
           <div className="col-span-full sm:col-span-3 md:col-span-4">
-            <Link href="/" className="mb-6 inline-block">
+            <Link href="/" className="mb-4 inline-block">
               <Image
-                width={130}
-                height={28}
+                width={180}
+                height={32}
                 src="/img/logo.png"
-                className="max-h-7 dark:hidden"
+                className="dark:hidden"
                 alt="Xmutant | NFT Marketplace"
               />
               <Image
-                width={130}
-                height={28}
+                width={180}
+                height={32}
                 src="/img/logo_white.png"
-                className="hidden max-h-7 dark:block"
+                className="hidden  dark:block"
                 alt="Xmutant | NFT Marketplace"
               />
             </Link>
             <p className="mb-12 dark:text-jacarta-300">
-              Create, sell and collect truly rare generative artworks. Powered by
-              blockchain technology.
+              Create, sell and collect truly rare generative artworks. Powered
+              by blockchain technology.
             </p>
 
             <div className="flex space-x-5">

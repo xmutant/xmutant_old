@@ -16,7 +16,7 @@ export default function Profile() {
   const balance = useBalance({
     address: address ? address : null,
   });
-  console.log(balance);
+
   return (
     <div className="js-nav-dropdown group-dropdown relative">
       <button

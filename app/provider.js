@@ -17,6 +17,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 
 import bittorrentchainTestnet from "@/config";
+import { modeTestnet } from "viem/chains";
 
 const { wallets } = getDefaultWallets();
 
@@ -30,7 +31,7 @@ const config = getDefaultConfig({
       wallets: [argentWallet, trustWallet, ledgerWallet],
     },
   ],
-  chains: [bittorrentchainTestnet],
+  chains: [modeTestnet],
   ssr: true,
 });
 

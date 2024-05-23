@@ -5,11 +5,9 @@ import { useEffect } from "react";
 export default function ModeChanger() {
   useEffect(() => {
     const htmlElm = document.getElementsByTagName("html")[0];
-    const currentState = localStorage?.getItem("idDarkMode");
-    if (JSON.parse(currentState) == true) {
+    const currentState = localStorage?.getItem("isDarkMode");
+    if (!JSON.parse(currentState)) {
       htmlElm.classList.add("dark");
-    } else {
-      htmlElm.classList.remove("dark");
     }
   }, []);
   return <></>;

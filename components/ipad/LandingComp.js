@@ -9,34 +9,34 @@ export default function Page() {
         <ContainerScroll
           users={users}
           titleComponent={
-            <>
-              <h1 className="md:text-[1.5rem] py-7 mb-16 text-black dark:text-white">
+            <div className="mb-4 lg:mb-16">
+              <h1 className="text-2xl md:text-[1.5rem] py-9 mb-4  text-black dark:text-white">
                 The world's largest digital marketplace for crypto collectibles.
                 <br />
                 <br />
-                <span className="text-2xl md:text-[5rem] font-bold mt-1 leading-none">
+                <span className="text-4xl md:text-[5rem] font-bold mt-1 leading-none text-black dark:text-white">
                   Buy, sell and collect NFTs.
                 </span>
               </h1>
-            </>
+              <div className="flex items-center justify-center py-2 md:items-start md:py-10 lg:py-6">
+                <div className="flex space-x-4">
+                  <Link
+                    href="/create"
+                    className="w-36 rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark"
+                  >
+                    Create
+                  </Link>
+                  <Link
+                    href="/collections"
+                    className="rtl:!mr-6 w-36 rounded-full bg-white py-3 px-8 text-center font-semibold text-accent shadow-white-volume transition-all hover:bg-accent-dark hover:text-white hover:shadow-accent-volume"
+                  >
+                    Explore
+                  </Link>
+                </div>
+              </div>
+            </div>
           }
         />
-      </div>
-      <div className="flex items-center justify-center py-10 md:items-start md:py-10">
-        <div className="flex space-x-4">
-          <Link
-            href="/create"
-            className="w-36 rounded-full bg-accent py-3 px-8 text-center font-semibold text-white shadow-accent-volume transition-all hover:bg-accent-dark"
-          >
-            Upload
-          </Link>
-          <Link
-            href="/collections"
-            className="rtl:!mr-6 w-36 rounded-full bg-white py-3 px-8 text-center font-semibold text-accent shadow-white-volume transition-all hover:bg-accent-dark hover:text-white hover:shadow-accent-volume"
-          >
-            Explore
-          </Link>
-        </div>
       </div>
     </div>
   );

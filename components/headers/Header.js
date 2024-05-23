@@ -14,8 +14,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 
 export default function Header() {
-
-  const {address, isConnected}= useAccount()
+  const { address, isConnected } = useAccount();
   useEffect(() => {
     addMobileMenuToggle();
     return () => {
@@ -45,7 +44,7 @@ export default function Header() {
           scrolled ? "js-page-header--is-sticky" : ""
         }`}
       >
-        <div className="flex items-center px-6 py-6 xl:px-24 ">
+        <div className="flex items-center px-6 py-2 xl:px-24 ">
           {/* Logo */}
           <Link href="/" className="shrink-0">
             <Image
@@ -56,8 +55,8 @@ export default function Header() {
               alt="Xmutant | NFT Marketplace"
             />
             <Image
-            width={200}
-            height={35}
+              width={200}
+              height={35}
               src="/img/logo_white.png"
               className="hidden dark:block"
               alt="Xmutant | NFT Marketplace"
@@ -71,22 +70,22 @@ export default function Header() {
               {/* Mobile Logo */}
               <Link href="/" className="shrink-0">
                 <Image
-                  width={130}
-                  height={28}
+                  width={150}
+                  height={26}
                   src="/img/logo.png"
-                  className="max-h-7 dark:hidden"
+                  className="dark:hidden"
                   alt="Xmutant | NFT Marketplace"
                 />
                 <Image
-                  width={130}
-                  height={28}
+                  width={150}
+                  height={26}
                   src="/img/logo_white.png"
-                  className="hidden max-h-7 dark:block"
+                  className="hidden dark:block"
                   alt="Xmutant | NFT Marketplace"
                 />
               </Link>
 
-              {/* Mobile Menu Close */}
+              {/* Mobile Menu Close button*/}
               <button
                 className="js-mobile-close group ml-2 flex h-10 w-10 items-center justify-center rounded-full border border-jacarta-100 bg-white transition-colors hover:border-transparent hover:bg-accent focus:border-transparent focus:bg-accent dark:border-transparent dark:bg-white/[.15] dark:hover:bg-accent"
                 aria-label="close mobile menu"
@@ -106,14 +105,14 @@ export default function Header() {
 
             {/* Primary Nav */}
             <nav className="navbar w-full">
-              <ul className="flex flex-col lg:flex-row">
+              <ul className="flex flex-col lg:flex-row lg:pt-0 pt-[100px]">
                 <Nav />
               </ul>
             </nav>
 
             {/* Mobile Connect Wallet / Socials */}
             <div className="mt-10 w-full lg:hidden">
-              <ConnectButton/>
+              <ConnectButton />
               <hr className="my-5 h-px border-0 bg-jacarta-100 dark:bg-jacarta-600" />
 
               {/* Socials */}
@@ -190,16 +189,16 @@ export default function Header() {
                 </a>
               </div>
             </div>
-            
+
             {/* Actions */}
             <div className=" hidden lg:flex xl:ml-7">
               {/* Wallet */}
               <div className="w-max">
-              <ConnectButton/>
+                <ConnectButton />
               </div>
-              
+
               {/* Profile */}
-              {address && isConnected ?<Profile /> : null}
+              {address && isConnected ? <Profile /> : null}
 
               {/* Dark Mode */}
               <div
@@ -232,24 +231,6 @@ export default function Header() {
 
           {/* Mobile Menu Actions */}
           <div className="ml-auto flex lg:hidden rtl:ml-0 rtl:mr-auto ">
-            {/* Profile */}
-            {address && isConnected ? <Link
-              href="/edit-profile"
-              className="group ml-2 flex h-10 w-10 items-center justify-center rounded-full border border-jacarta-100 bg-white transition-colors hover:border-transparent hover:bg-accent focus:border-transparent focus:bg-accent dark:border-transparent dark:bg-white/[.15] dark:hover:bg-accent"
-              aria-label="profile"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                className="h-4 w-4 fill-jacarta-700 transition-colors group-hover:fill-white group-focus:fill-white dark:fill-white"
-              >
-                <path fill="none" d="M0 0h24v24H0z" />
-                <path d="M11 14.062V20h2v-5.938c3.946.492 7 3.858 7 7.938H4a8.001 8.001 0 0 1 7-7.938zM12 13c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6z" />
-              </svg>
-            </Link> : null}
-
             {/* Dark Mode */}
             <div
               onClick={() => handleDarkMode()}

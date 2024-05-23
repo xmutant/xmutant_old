@@ -31,10 +31,13 @@ export const ContainerScroll = ({ users, titleComponent }) => {
 
   return (
     <div
-      className="h-[65rem] flex items-center justify-center relative p-20"
+      className="h-[65rem] flex items-center justify-center relative p-2 lg:p-20"
       ref={containerRef}
     >
-      <div className="py-20 w-full relative" style={{ perspective: "1000px" }}>
+      <div
+        className="py-2 w-full relative lg:py-20"
+        style={{ perspective: "1000px" }}
+      >
         <Header translate={translate} titleComponent={titleComponent} />
         {users && users.length > 0 ? (
           <Card
@@ -71,13 +74,13 @@ export const Card = ({ rotate, scale, translate, users }) => {
         boxShadow:
           "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
       }}
-      className="max-w-5xl -mt-8 mx-auto h-[30rem] md:h-[40rem] w-full border-4 border-[#6C6C6C] p-8 bg-[#222222] rounded-[30px] shadow-2xl"
+      className="max-w-5xl -mt-8 mx-auto h-[40rem] md:h-[40rem] w-full border-2 border-[#6C6C6C] p-4 bg-[#222222] rounded-[30px] shadow-xl"
     >
-      <div className="bg-gray-100 h-full w-full rounded-2xl grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 overflow-hidden p-2">
+      <div className="bg-gray-100 h-full w-full rounded-2xl grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 overflow-hidden p-2">
         {users.map((user, idx) => (
           <article key={idx} className="relative">
             <div className="block rounded-2.5xl border border-jacarta-100 bg-white p-2  transition-shadow hover:shadow-lg dark:border-jacarta-700 dark:bg-jacarta-700">
-              <figure className="pt-4 py-1">
+              <figure className="p-1">
                 <Image
                   src={user.image}
                   alt="item"
@@ -95,9 +98,9 @@ export const Card = ({ rotate, scale, translate, users }) => {
                   {user.name}
                 </h3>
               </div>
-              <div className="absolute top-5 right-2 rounded-full text-xs font-bold bg-white px-2 py-1">
+              {/* <div className="absolute top-5 right-2 rounded-full text-xs font-bold bg-white px-2 py-1">
                 {user.category}
-              </div>
+              </div> */}
             </div>
           </article>
         ))}

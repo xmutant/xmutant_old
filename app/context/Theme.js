@@ -4,12 +4,10 @@ import React, {
   useCallback,
   useRef,
   useEffect,
-} from "react"
+} from "react";
 // import { useClientEffect } from "../utils/hookts"
-import style from "./Theme.module.scss"
-import cs from "classnames"
-
-
+import style from "./Theme.module.scss";
+import cs from "classnames";
 
 const Colors = {
   light: {
@@ -46,14 +44,14 @@ const Colors = {
     border: "#0f0f0f",
     "border-input": "#7e7e7e",
   },
-}
+};
 
 const hasReducedMotion =
   typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)")
+  window.matchMedia("(prefers-reduced-motion: reduce)");
 
 const defaultProperties = {
-  darkTheme: false,
+  darkTheme: true,
   spaceBetweenCards: 30,
   borderWidthCards: 3,
   shadowCards: 19,
@@ -75,84 +73,81 @@ const defaultProperties = {
   showMintTicketAlerts: true,
   showOfferAlerts: true,
   offerAlertsFloorThreshold: 0.5,
-
-
-}
+};
 
 const defaultCtx = {
   ...defaultProperties,
-  update: () => { },
+  update: () => {},
   theme: {
-    colors: Colors.light,
+    colors: Colors.dark,
   },
-}
+};
 
-export const SettingsContext = React.createContext(defaultCtx)
+export const SettingsContext = React.createContext(defaultCtx);
 
-export const useSettingsContext = () =>
-  React.useContext(SettingsContext)
+export const useSettingsContext = () => React.useContext(SettingsContext);
 
 export function SettingsProvider({ children }) {
-  const [context, setContext] = useState(defaultCtx)
-  const ref = useRef(context)
+  const [context, setContext] = useState(defaultCtx);
+  const ref = useRef(context);
 
   const computeThemeValues = (dark) => {
     return {
       colors: dark ? Colors.dark : Colors.light,
-    }
-  }
+    };
+  };
 
   const updateContext = (ctx) => {
     setContext({
       ...ctx,
       theme: computeThemeValues(ctx.darkTheme),
-    })
-    ref.current = ctx
-  }
+    });
+    ref.current = ctx;
+  };
 
   const update = (key, value) => {
     const newContext = {
       ...ref.current,
       [key]: value,
-    }
-    updateContext(newContext)
-    localStorage.setItem("settings", JSON.stringify(newContext))
-  }
+    };
+    updateContext(newContext);
+    localStorage.setItem("settings", JSON.stringify(newContext));
+  };
 
   useEffect(() => {
     // check for the settings in the local storage
-    const fromStorage = localStorage.getItem("settings")
-    const values = fromStorage ? JSON.parse(fromStorage) : defaultProperties
+    const fromStorage = localStorage.getItem("settings");
+    const values = fromStorage ? JSON.parse(fromStorage) : defaultProperties;
     updateContext({
       ...defaultProperties,
       ...values,
       update,
-    })
-  }, [])
+    });
+  }, []);
 
   // triggers whenever settings change
   useEffect(() => {
     // update some css variables with numeric inputs
-    const root = document.documentElement
+    const root = document.documentElement;
     root.style.setProperty(
       "--cards-border-width",
       `${context.borderWidthCards}px`
-    )
-    root.style.setProperty("--cards-shadow", `${context.shadowCards}px`)
-    root.style.setProperty("--cards-gap", `${context.spaceBetweenCards}px`)
-  }, [context])
+    );
+    root.style.setProperty("--cards-shadow", `${context.shadowCards}px`);
+    root.style.setProperty("--cards-gap", `${context.spaceBetweenCards}px`);
+  }, [context]);
 
   useEffect(() => {
     if (context.darkTheme) {
-      document.body.classList.add("dark")
+      document.body.classList.add("dark");
     } else {
-      document.body.classList.remove("dark")
+      document.body.classList.remove("dark");
     }
-  }, [context.darkTheme])
+  }, [context.darkTheme]);
 
   return (
     <SettingsContext.Provider value={context}>
       <div className={cs(style.root_wrapper)}>{children}</div>
     </SettingsContext.Provider>
-  )
+  );
 }
