@@ -45,52 +45,52 @@ export default function Page() {
 
 export const users = [
   { 
-    name: "Chimera Paul",
-    collection: "Arsito",
+    name: "Arsito Paul",
+    collection: "Arsito's Canvas",
     image: "/img/fakeNFTs/nft1.jpg",
     category: "Art",
   },
   {
     name: "Robert Johnson",
-    collection: "Bad Luck",
+    collection: "Verve",
     image: "/img/fakeNFTs/nft2.jpg",
     category: "Photography",
   },
   {
     name: "Richard Taylor",
-    collection: "The Spiral",
+    collection: "7 Wonders",
     image: "/img/fakeNFTs/nft3.png",
     category: "Collectible",
   },
 
   {
     name: "Linda Anderson",
-    collection: "The End",
-    image: "/img/fakeNFTs/nft13.jpg",
+    collection: "Masabi",
+    image: "/img/fakeNFTs/nft16.jpg",
     category: "Art",
   },
 
   {
     name: "Sarah Brown",
-    collection: "BasedPunks",
+    collection: "Wanderlust",
     image: "/img/fakeNFTs/nft5.jpg",
     category: "Art",
   },
   {
     name: "Michael Miller",
-    collection: "Mochimons",
+    collection: "MichMons",
     image: "/img/fakeNFTs/nft6.jpg",
     category: "Photography",
   },
   {
-    name: "Justin Eversano",
-    collection: "Dackie on Base",
+    name: "Michael Miller",
+    collection: "MichMons",
     image: "/img/fakeNFTs/nft7.jpg",
     category: "Photography",
   },
   {
     name: "David White",
-    collection: "Metropolis",
+    collection: "Dracarys",
     image: "/img/fakeNFTs/nft8.jpg",
     category: "Art",
   },
@@ -104,7 +104,7 @@ export const users = [
 
   {
     name: "Linda Anderson",
-    collection: "Chimera",
+    collection: "Wanderlust",
     image: "/img/fakeNFTs/nft10.jpg",
     category: "Art",
   },
